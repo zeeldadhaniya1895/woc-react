@@ -35,11 +35,12 @@ const navigate = useNavigate();
         background: 'linear-gradient(90deg, #A294F9, #CDC1FF, #E5D9F2)',
         color: 'white',
         boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
-        padding: '0.5rem 0',
+        padding: '0 0',
+        height: '3.2rem',
       }}
     >
-      <Container maxWidth="xl">
-        <Toolbar disableGutters>
+      <Container maxWidth="xl" sx={{padding: '0 0',height: '3.2rem'}}>
+        <div className='flex justify-between items-center h-full'>
           <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 2, fontSize: '2rem' }} />
           <Typography
             variant="h6"
@@ -109,7 +110,7 @@ const navigate = useNavigate();
               ))}
             </Menu>
           </Box>
-        </Toolbar>
+        </div>
       </Container>
     </AppBar>
   );
