@@ -1,7 +1,8 @@
 
 import React, { useState } from "react";
 import { Rnd } from "react-rnd";
-import { EditorView, basicSetup } from "@codemirror/view";
+import { EditorView } from "@codemirror/view";
+import { basicSetup } from "codemirror";
 import { EditorState } from "@codemirror/state";
 import { javascript } from "@codemirror/lang-javascript";
 import Navbar from "../components/Navbar";
@@ -19,7 +20,7 @@ const App = () => {
       editorRef.current = new EditorView({
         state: EditorState.create({
           doc: "// Write your code here\nconsole.log('Hello, CodeMirror!');",
-          extensions: [basicSetup, javascript()]
+          extensions: [basicSetup, javascript()],
         }),
         parent: editorContainerRef.current,
       });
