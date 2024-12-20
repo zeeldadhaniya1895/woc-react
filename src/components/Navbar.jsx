@@ -1,7 +1,6 @@
 import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
@@ -10,12 +9,11 @@ import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
-import authService from '../appwrite/auth.service';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
-function Navbar() {
-const navigate = useNavigate();
+function Navbar({ onLogout }) {
+
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
   const handleOpenUserMenu = (event) => {
@@ -24,9 +22,9 @@ const navigate = useNavigate();
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
-  const handleLogout = async () => {
-    await authService.logout();
-    navigate('/');  };
+  // const handleLogout = async () => {
+  //   await authService.logout();
+  //   navigate('/');  };
 
   return (
     <AppBar
@@ -94,7 +92,7 @@ const navigate = useNavigate();
                   key={setting}
                   onClick={()=>{
                     if(setting==='Logout'){
-                     handleLogout();
+                     onLogout();
                     }
                     handleCloseUserMenu();
                   }}

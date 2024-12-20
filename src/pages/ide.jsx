@@ -5,7 +5,7 @@ import CodeEditor from "../components/codeEditor";
 import Terminal from "../components/terminal";
 import Menubar from "../components/Menubar";
 
-const App = () => {
+const App = ({onLogout}) => {
   const [fileSectionVisible, setFileSectionVisible] = useState(true);
   const [fileSectionWidth, setFileSectionWidth] = useState(250);
   const [terminalVisible, setTerminalVisible] = useState(false);
@@ -14,7 +14,7 @@ const App = () => {
   return (
     <div className="h-screen flex flex-col overflow-hidden">
       {/* Header */}
-      <Navbar />
+      <Navbar onLogout={onLogout} />
       
       {/*Menubar */}
       <Menubar fileSectionVisible={fileSectionVisible} setFileSectionVisible={setFileSectionVisible} terminalVisible={terminalVisible} setTerminalVisible={setTerminalVisible} />
