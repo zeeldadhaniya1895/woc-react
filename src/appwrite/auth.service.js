@@ -36,8 +36,8 @@ export class AuthService {
         try {
             await this.account.createOAuth2Session(
                 'google', // Use 'google' as the provider string
-                'https://boardcode.netlify.app/ide', 
-                'https://boardcode.netlify.app/'
+                'http://localhost:5173/ide', 
+                'http://localhost:5173/'
             );
         } catch (error) {
             console.log("appwrite service :: createAccountWithGoogle :: error", error);
