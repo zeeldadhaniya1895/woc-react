@@ -6,75 +6,30 @@ import { basicSetup } from "codemirror";
 import { EditorState } from "@codemirror/state";
 import { javascript } from "@codemirror/lang-javascript";
 import Navbar from "../components/Navbar";
+import Filerbar from "../components/filebar";
+import CodeEditor from "../components/codeEditor";
+import Terminal from "../components/terminal";
+import Menubar from "../components/Menubar";
 
 const App = () => {
   const [fileSectionVisible, setFileSectionVisible] = useState(true);
   const [fileSectionWidth, setFileSectionWidth] = useState(250);
   const [terminalVisible, setTerminalVisible] = useState(false);
   const [terminalHeight, setTerminalHeight] = useState(250);
-  const editorContainerRef = useRef(null);
-  const editorRef = useRef(null);
-
-  useEffect(() => {
-    if (editorContainerRef.current && !editorRef.current) {
-      editorRef.current = new EditorView({
-        state: EditorState.create({
-          doc: "// Write your code here\nconsole.log('Hello, CodeMirror!');",
-          extensions: [basicSetup, javascript()],
-        }),
-        parent: editorContainerRef.current,
-      });
-    }
-
-    return () => {
-      if (editorRef.current) {
-        editorRef.current.destroy();
-        editorRef.current = null;
-      }
-    };
-  }, []);
 
   return (
     <div className="h-screen flex flex-col overflow-hidden">
       {/* Header */}
       <Navbar />
-      <div className="bg-gray-900 text-white p-2 flex justify-between items-center">
-        <button
-          onClick={() => setFileSectionVisible(!fileSectionVisible)}
-          className="bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-600"
-        >
-          Toggle Sidebar
-        </button>
-        <button
-          onClick={() => {
-            setTerminalVisible(!terminalVisible);
-            setTerminalHeight(250);
-          }}
-          className="bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-600"
-        >
-          Toggle Terminal
-        </button>
-      </div>
+      
+      {/*Menubar */}
+      <Menubar fileSectionVisible={fileSectionVisible} setFileSectionVisible={setFileSectionVisible} terminalVisible={terminalVisible} setTerminalVisible={setTerminalVisible} />
 
       {/* Main Content */}
       <div className="flex flex-1 relative overflow-hidden bg-gray-800">
+        
         {/* File Sidebar */}
-        {fileSectionVisible && (
-          <Rnd
-            size={{ width: fileSectionWidth, height: "100%" }}
-            minWidth={150}
-            maxWidth={400}
-            enableResizing={{ right: true }}
-            disableDragging={true}
-            onResizeStop={(e, direction, ref) => {
-              setFileSectionWidth(ref.offsetWidth);
-            }}
-            className="bg-gray-900 border-r border-gray-700 flex flex-col justify-start items-center p-4"
-          >
-            <h3 className="text-gray-400">Sidebar</h3>
-          </Rnd>
-        )}
-
+        {fileSectionVisible &&<Filerbar fileSectionWidth={fileSectionWidth} setFileSectionWidth={setFileSectionWidth} />}
         {/* IDE Section */}
         <div
           className={`flex flex-1 flex-col overflow-hidden relative ${
