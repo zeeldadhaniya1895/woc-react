@@ -1,16 +1,40 @@
 
 import React, { useState } from "react";
 import { Rnd } from "react-rnd";
+import { EditorView, basicSetup } from "@codemirror/view";
+import { EditorState } from "@codemirror/state";
+import { javascript } from "@codemirror/lang-javascript";
 import Navbar from "../components/Navbar";
 
 const App = () => {
   const [fileSectionVisible, setFileSectionVisible] = useState(true);
   const [fileSectionWidth, setFileSectionWidth] = useState(250);
   const [terminalVisible, setTerminalVisible] = useState(false);
-  const [terminalHeight, setTerminalHeight] = useState(100);
+  const [terminalHeight, setTerminalHeight] = useState(250);
+  const editorContainerRef = useRef(null);
+  const editorRef = useRef(null);
+
+  useEffect(() => {
+    if (editorContainerRef.current && !editorRef.current) {
+      editorRef.current = new EditorView({
+        state: EditorState.create({
+          doc: "// Write your code here\nconsole.log('Hello, CodeMirror!');",
+          extensions: [basicSetup, javascript()]
+        }),
+        parent: editorContainerRef.current,
+      });
+    }
+
+    return () => {
+      if (editorRef.current) {
+        editorRef.current.destroy();
+        editorRef.current = null;
+      }
+    };
+  }, []);
 
   return (
-    <div className="h-screen flex flex-col">
+    <div className="h-screen flex flex-col overflow-hidden">
       {/* Header */}
       <Navbar />
       <div className="bg-gray-900 text-white p-2 flex justify-between items-center">
@@ -21,7 +45,10 @@ const App = () => {
           Toggle Sidebar
         </button>
         <button
-          onClick={() => setTerminalVisible(!terminalVisible)}
+          onClick={() => {
+            setTerminalVisible(!terminalVisible);
+            setTerminalHeight(250);
+          }}
           className="bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-600"
         >
           Toggle Terminal
