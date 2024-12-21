@@ -11,7 +11,7 @@ function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     useEffect(() => {
-        const user = authService.getStoredSession(); // Check localStorage for session
+        const user = authService.getStoredSession(); 
         setIsLoggedIn(!!user);
     }, []);
 
