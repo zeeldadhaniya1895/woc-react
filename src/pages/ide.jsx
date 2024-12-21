@@ -5,7 +5,7 @@ import CodeEditor from "../components/codeEditor";
 import Terminal from "../components/terminal";
 import Menubar from "../components/Menubar";
 
-const App = ({onLogout}) => {
+const Ide = ({onLogout}) => {
   const [fileSectionVisible, setFileSectionVisible] = useState(true);
   const [fileSectionWidth, setFileSectionWidth] = useState(250);
   const [terminalVisible, setTerminalVisible] = useState(false);
@@ -17,13 +17,14 @@ const App = ({onLogout}) => {
       <Navbar onLogout={onLogout} />
       
       {/*Menubar */}
-      <Menubar fileSectionVisible={fileSectionVisible} setFileSectionVisible={setFileSectionVisible} terminalVisible={terminalVisible} setTerminalVisible={setTerminalVisible} />
+      <Menubar fileSectionVisible={fileSectionVisible} setFileSectionVisible={setFileSectionVisible} terminalVisible={terminalVisible} setTerminalVisible={setTerminalVisible} setTerminalHeight={setTerminalHeight} />
 
       {/* Main Content */}
       <div className="flex flex-1 relative overflow-hidden bg-gray-800">
         
         {/* File Sidebar */}
         {fileSectionVisible &&<Filerbar fileSectionWidth={fileSectionWidth} setFileSectionWidth={setFileSectionWidth} />}
+
         {/* IDE Section */}
         <CodeEditor fileSectionWidth={fileSectionWidth} fileSectionVisible={fileSectionVisible} />
 
@@ -36,4 +37,4 @@ const App = ({onLogout}) => {
   );
 };
 
-export default App;
+export default Ide;

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Rnd } from 'react-rnd'
 
-export default function terminal() {
+export default function terminal({terminalHeight, setTerminalHeight}) {
   return (
     <Rnd
       size={{ height: terminalHeight, width: "100%" }}

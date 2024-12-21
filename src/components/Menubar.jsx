@@ -1,6 +1,6 @@
 
 
-export default function Menubar() {
+export default function Menubar({fileSectionVisible, setFileSectionVisible, terminalVisible, setTerminalVisible,setTerminalHeight}) { 
   return (
         <div className="bg-gray-900 text-white p-2 flex justify-between items-center">
            <button
