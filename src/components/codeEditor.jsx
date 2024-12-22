@@ -5,7 +5,6 @@ import {
   setEditorCode,
   setThemecolor
 } from "../store/varSlice";
-
 // Import CodeMirror related dependencies
 import { EditorState } from "@codemirror/state";
 import { EditorView, keymap } from "@codemirror/view";
@@ -15,7 +14,7 @@ import { boysAndGirls, ayuLight, barf, cobalt, clouds } from "thememirror";
 import { defaultKeymap } from "@codemirror/commands";
 import { javascript } from "@codemirror/lang-javascript";
 import {themess} from "../config/theme"
-import { linter} from "@codemirror/lint";
+
 
 // CodeEditor component that takes fileSectionWidth and fileSectionVisible as props
 export default function CodeEditor({ fileSectionWidth, fileSectionVisible }) {
@@ -47,23 +46,6 @@ export default function CodeEditor({ fileSectionWidth, fileSectionVisible }) {
     clouds,
   };
 
- 
-
-  const myLinter = linter((view) => {
-    const diagnostics = [];
-    const doc = view.state.doc.toString();
-    if (doc.includes("eval")) {
-      diagnostics.push({
-        from: doc.indexOf("eval"),
-        to: doc.indexOf("eval") + 4,
-        severity: "warning",
-        message: "Avoid using eval!",
-      });
-    }
-    return diagnostics;
-  });
-  
-
   // Initialize and configure CodeMirror editor
   useEffect(() => {
     const themecc=themess.filter((themes)=>themes.name==theme)[0].color; 
@@ -78,7 +60,6 @@ export default function CodeEditor({ fileSectionWidth, fileSectionVisible }) {
             javascript(),
             themes[theme] || oneDark,
             isLineWrapping ? EditorView.lineWrapping : [],
-            myLinter,
             keymap.of(defaultKeymap),
             EditorView.updateListener.of((update) => {
               if (update.docChanged) {
