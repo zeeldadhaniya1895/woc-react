@@ -4,6 +4,7 @@ import { LANGUAGE_DATA } from "../config/constants"; // Assuming LANGUAGE_DATA i
 const initialState = {
   editor: {
     theme: 'oneDark',
+    themec: '#282C34',
     language: 'c',
     version: '10.2.0',
     codeSnippet: `#include <stdio.h>\n\nint main() {\n\tprintf("Welcome to boardcode The code editor!");\n\treturn 0;\n}\n`,
@@ -38,11 +39,14 @@ const varSlice = createSlice({
         };
       }
     },
+    setThemecolor: (state, action) => {
+      state.editor.themec = action.payload;
+    },
     toggleLineWrapping: (state) => {
       state.editor.isLineWrapping = !state.editor.isLineWrapping;
     },
   },
 });
 
-export const { setEditorTheme, setEditorCode, setEditorLanguage, toggleLineWrapping } = varSlice.actions;
+export const { setEditorTheme, setEditorCode, setEditorLanguage, toggleLineWrapping,setThemecolor } = varSlice.actions;
 export default varSlice.reducer;

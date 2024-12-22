@@ -1,3 +1,4 @@
+// Import necessary components and modules from React and Material-UI
 import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -9,24 +10,32 @@ import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
-// import { useNavigate } from 'react-router-dom';
+
+// Define settings array for user menu options
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
+// Main Navbar component that accepts onLogout prop
 function Navbar({ onLogout }) {
-
+  // State to handle user menu anchor element
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
+  // Handler to open user menu
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
   };
+
+  // Handler to close user menu
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+
+  // Commented out legacy logout handler
   // const handleLogout = async () => {
   //   await authService.logout();
   //   navigate('/');  };
 
   return (
+    // Main AppBar component with custom styling
     <AppBar
       position="static"
       sx={{
@@ -37,9 +46,13 @@ function Navbar({ onLogout }) {
         height: '3.2rem',
       }}
     >
+      {/* Container for navbar content */}
       <Container maxWidth="xl" sx={{padding: '0 0',height: '3.2rem'}}>
         <div className='flex justify-between items-center h-full'>
+          {/* Logo icon */}
           <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 2, fontSize: '2rem' }} />
+          
+          {/* Logo text */}
           <Typography
             variant="h6"
             noWrap
@@ -59,9 +72,12 @@ function Navbar({ onLogout }) {
             LOGO
           </Typography>
 
+          {/* Spacer */}
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}></Box>
 
+          {/* User menu section */}
           <Box sx={{ flexGrow: 0 }}>
+            {/* User avatar button */}
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar
@@ -71,6 +87,8 @@ function Navbar({ onLogout }) {
                 />
               </IconButton>
             </Tooltip>
+            
+            {/* Dropdown menu */}
             <Menu
               sx={{ mt: '45px', borderRadius: '8px', overflow: 'hidden' }}
               id="menu-appbar"
@@ -87,10 +105,12 @@ function Navbar({ onLogout }) {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
+              {/* Menu items */}
               {settings.map((setting) => (
                 <MenuItem
                   key={setting}
                   onClick={()=>{
+                    // Handle logout action if logout is clicked
                     if(setting==='Logout'){
                      onLogout();
                     }
@@ -113,4 +133,6 @@ function Navbar({ onLogout }) {
     </AppBar>
   );
 }
+
+// Export the Navbar component
 export default Navbar;
