@@ -30,8 +30,9 @@ const Ide = ({onLogout}) => {
 
       </div>
 
-      {/* Terminal Section */}
+        {/* Terminal Section */}
       {terminalVisible && <Terminal terminalHeight={terminalHeight} setTerminalHeight={setTerminalHeight} setTerminalVisible={setTerminalVisible} />}
+      
 
     </div>
   );
