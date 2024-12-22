@@ -72,8 +72,8 @@ class AuthService {
             // Initiate OAuth2 session
             await this.account.createOAuth2Session(
                 "google",
-                `${window.location.origin}/ide`, // Success URL
-                `${window.location.origin}/` // Failure URL
+                `https://boardcode.netlify.app/ide`, // Success URL
+                `https://boardcode.netlify.app/` // Failure URL
             );
 
             // After redirect, fetch and store the authenticated user
