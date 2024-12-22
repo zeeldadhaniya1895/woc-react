@@ -10,15 +10,14 @@ import axios from "axios";
  */
 export const executeCode = async (language, version, sourceCode, codeInput = "") => {
   try {
+    console.log(language, version, sourceCode, codeInput);
     const response = await axios.post("https://winter-of-code-react-js.vercel.app/code/execute-code", {
       language: language.toLowerCase(),
       version,
       sourceCode,
       codeInput,
     });
-
-    
-
+    console.log(response.data);
     // Return standard output if present, otherwise return error output
     return response.data || "Execution completed with no output.";
   } catch (error) {
@@ -26,3 +25,4 @@ export const executeCode = async (language, version, sourceCode, codeInput = "")
     throw new Error("An error occurred while executing the code.");
   }
 };
+
