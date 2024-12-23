@@ -6,8 +6,8 @@ class AuthService {
 
     constructor() {
         this.client
-            .setEndpoint(import.meta.env.VITE_AppWrite_URL)
-            .setProject(import.meta.env.VITE_AppWrite_Project_ID);
+            .setEndpoint("https://cloud.appwrite.io/v1")
+            .setProject("676927490019a5a50378");
 
         this.account = new Account(this.client);
     }
