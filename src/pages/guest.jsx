@@ -5,25 +5,22 @@ import CodeEditor from "../components/codeEditor";
 import Terminal from "../components/terminal";
 import Menubar from "../components/Menubar";
 
-const Ide = ({onLogout}) => {
+const Guest = ({onLogout}) => {
   const [fileSectionVisible, setFileSectionVisible] = useState(true);
-  const [fileSectionWidth, setFileSectionWidth] = useState(250);
+  const [fileSectionWidth, setFileSectionWidth] = useState(0);
   const [terminalVisible, setTerminalVisible] = useState(false);
   const [terminalHeight, setTerminalHeight] = useState(250);
 
   return (
     <div className="h-screen flex flex-col overflow-hidden">
       {/* Header */}
-      <Navbar onLogout={onLogout} guest={false} />
+      <Navbar onLogout={onLogout} guest={true} />
       
       {/*Menubar */}
-      <Menubar fileSectionVisible={fileSectionVisible} setFileSectionVisible={setFileSectionVisible} terminalVisible={terminalVisible} setTerminalVisible={setTerminalVisible} setTerminalHeight={setTerminalHeight} guest={false} />
+      <Menubar fileSectionVisible={fileSectionVisible} setFileSectionVisible={setFileSectionVisible} terminalVisible={terminalVisible} setTerminalVisible={setTerminalVisible} setTerminalHeight={setTerminalHeight} guest={true} />
 
       {/* Main Content */}
-      <div className="flex flex-1 relative overflow-hidden bg-gray-800">
-        
-        {/* File Sidebar */}
-        {fileSectionVisible &&<Filerbar fileSectionWidth={fileSectionWidth} setFileSectionWidth={setFileSectionWidth} />}
+      <div className="flex flex-1 relative overflow-hidden bg-gray-800">       
 
         {/* IDE Section */}
         <CodeEditor fileSectionWidth={fileSectionWidth} fileSectionVisible={fileSectionVisible} />
@@ -38,4 +35,4 @@ const Ide = ({onLogout}) => {
   );
 };
 
-export default Ide;
+export default Guest;

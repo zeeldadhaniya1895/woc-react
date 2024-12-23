@@ -15,7 +15,7 @@ import AdbIcon from '@mui/icons-material/Adb';
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 // Main Navbar component that accepts onLogout prop
-function Navbar({ onLogout }) {
+function Navbar({ onLogout,guest }) {
   // State to handle user menu anchor element
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -28,11 +28,6 @@ function Navbar({ onLogout }) {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
-
-  // Commented out legacy logout handler
-  // const handleLogout = async () => {
-  //   await authService.logout();
-  //   navigate('/');  };
 
   return (
     // Main AppBar component with custom styling
@@ -76,58 +71,67 @@ function Navbar({ onLogout }) {
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}></Box>
 
           {/* User menu section */}
-          <Box sx={{ flexGrow: 0 }}>
-            {/* User avatar button */}
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar
-                  alt="User Avatar"
-                  src="/static/images/avatar/2.jpg"
-                  sx={{ border: '2px solid black' }}
-                />
-              </IconButton>
-            </Tooltip>
-            
-            {/* Dropdown menu */}
-            <Menu
-              sx={{ mt: '45px', borderRadius: '8px', overflow: 'hidden' }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {/* Menu items */}
-              {settings.map((setting) => (
-                <MenuItem
-                  key={setting}
-                  onClick={()=>{
-                    // Handle logout action if logout is clicked
-                    if(setting==='Logout'){
-                     onLogout();
-                    }
-                    handleCloseUserMenu();
+            {
+              guest ? (
+                <div className='flex items-center gap-2'>
+                  <a href="/login" className='text-white'>Login</a>
+                  <a href="/signup" className='text-white'>Signup</a>
+                </div>
+              ):(
+                <Box sx={{ flexGrow: 0 }}>
+                {/* User avatar button */}
+                <Tooltip title="Open settings">
+                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                    <Avatar
+                      alt="User Avatar"
+                      src="/static/images/avatar/2.jpg"
+                      sx={{ border: '2px solid black' }}
+                    />
+                  </IconButton>
+                </Tooltip>
+                
+                {/* Dropdown menu */}
+                <Menu
+                  sx={{ mt: '45px', borderRadius: '8px', overflow: 'hidden' }}
+                  id="menu-appbar"
+                  anchorEl={anchorElUser}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
                   }}
-                  sx={{
-                    backgroundColor: '#E5D9F2',
-                    '&:hover': { backgroundColor: '#CDC1FF' },
+                  keepMounted
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
                   }}
+                  open={Boolean(anchorElUser)}
+                  onClose={handleCloseUserMenu}
                 >
-                  <Typography sx={{ textAlign: 'center', color: '#4A4A4A' }}>
-                    {setting}
-                  </Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
+                  {/* Menu items */}
+                  {settings.map((setting) => (
+                    <MenuItem
+                      key={setting}
+                      onClick={()=>{
+                        // Handle logout action if logout is clicked
+                        if(setting==='Logout'){
+                         onLogout();
+                        }
+                        handleCloseUserMenu();
+                      }}
+                      sx={{
+                        backgroundColor: '#E5D9F2',
+                        '&:hover': { backgroundColor: '#CDC1FF' },
+                      }}
+                    >
+                      <Typography sx={{ textAlign: 'center', color: '#4A4A4A' }}>
+                        {setting}
+                      </Typography>
+                    </MenuItem>
+                  ))}
+                </Menu>
+              </Box>
+              )
+            }
         </div>
       </Container>
     </AppBar>

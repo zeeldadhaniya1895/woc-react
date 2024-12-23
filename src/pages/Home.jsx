@@ -22,7 +22,7 @@ export default function Home() {
                 <div className="max-w-4xl mx-auto">
                     <h2 className="text-5xl font-extrabold text-gray-800 mb-6 leading-tight">Your Ultimate Online Coding Platform</h2>
                     <p className="text-lg text-gray-600 mb-8">Build, debug, and collaborate on code seamlessly from any device. Experience powerful tools and real-time features designed to enhance your development journey.</p>
-                    <button className="bg-[#A294F9] text-white px-8 py-3 rounded-full shadow-lg font-medium hover:bg-[#A294F9] transition-transform transform hover:scale-105">
+                    <button className="bg-[#A294F9] text-white px-8 py-3 rounded-full shadow-lg font-medium hover:bg-[#A294F9] transition-transform transform hover:scale-105" onClick={() => window.location.href = '/guest'}>
                         Get Started for Free
                     </button>
                 </div>

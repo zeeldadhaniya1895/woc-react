@@ -22,7 +22,7 @@ import { FaBars, FaTerminal, FaPlay, FaCode, FaPalette, FaLanguage } from "react
 import {setAll,setOutput} from "../store/apiResponseSlice";
 
 // Main Menubar component
-export default function Menubar({ fileSectionVisible, setFileSectionVisible, terminalVisible, setTerminalVisible, setTerminalHeight }) {
+export default function Menubar({ fileSectionVisible, setFileSectionVisible, terminalVisible, setTerminalVisible, setTerminalHeight,guest }) {
   // Initialize Redux dispatch
   const dispatch = useDispatch();
   
@@ -87,12 +87,13 @@ export default function Menubar({ fileSectionVisible, setFileSectionVisible, ter
       {/* Left Section */}
       <div className="flex items-center space-x-2 mb-2 sm:mb-0">
         {/* File section toggle button */}
-        <button
-          onClick={() => setFileSectionVisible(!fileSectionVisible)}
-          className="p-2 bg-gray-700 text-white rounded-full hover:bg-gray-600 flex items-center justify-center shadow-md"
-        >
+        {
+          guest ? null :(
+          <button onClick={() => setFileSectionVisible(!fileSectionVisible)}
+          className="p-2 bg-gray-700 text-white rounded-full hover:bg-gray-600 flex items-center justify-center shadow-md">
           <FaBars className="text-lg" />
-        </button>
+          </button>)
+        }
         
         {/* Terminal toggle button */}
         <button
