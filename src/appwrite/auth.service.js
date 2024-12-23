@@ -65,7 +65,6 @@ class AuthService {
 
 async createAccount({ email, password, name, rememberMe=false }) {
     try {
-        await this.setPersistence(persistence); // Set persistence before creating account
         const userCredential = await createUserWithEmailAndPassword(this.auth, email, password);
         const user = userCredential.user;
 
@@ -75,7 +74,8 @@ async createAccount({ email, password, name, rememberMe=false }) {
         }
 
         await this.storeSession(user);
-        await this.handleUserLogin(email , password,rememberMe) // Store user in localStorage
+        await this.handleUserLogin(email , password,rememberMe)
+        window.location.href = "/ide";
         return { user };
     } catch (error) {
         console.log("AuthService :: createAccount :: error", error);
