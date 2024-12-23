@@ -71,7 +71,8 @@ class AuthService {
             const userCredential = await signInWithEmailAndPassword(this.auth, email, password);
             const user = userCredential.user;
 
-            await this.storeSession(user); // Store user in localStorage
+            await this.storeSession(user);
+            window.location.href = "/ide"; 
             return { user };
         } catch (error) {
             console.log("AuthService :: login :: error", error);
@@ -87,14 +88,19 @@ class AuthService {
             const provider = new GoogleAuthProvider();
             const result = await signInWithPopup(this.auth, provider);
             const user = result.user;
-
-            await this.storeSession(user); // Store user in localStorage
+    
+            await this.storeSession(user);
+    
+            // Redirect to /ide after successful login
+            window.location.href = "/ide";
+    
             return { user };
         } catch (error) {
             console.log("AuthService :: createAccountWithGoogle :: error", error);
             return { error };
         }
     }
+    
 
     /**
      * Logout from all sessions
