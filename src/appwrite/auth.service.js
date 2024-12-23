@@ -1,30 +1,41 @@
-import { Client, Account, ID } from "appwrite";
+import { initializeApp } from "firebase/app";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, setPersistence, browserLocalPersistence, browserSessionPersistence, inMemoryPersistence } from "firebase/auth";
 
 class AuthService {
-    client = new Client();
-    account;
-
     constructor() {
-        this.client
-            .setEndpoint(import.meta.env.VITE_AppWrite_URL)
-            .setProject(import.meta.env.VITE_AppWrite_Project_ID);
-
-        this.account = new Account(this.client);
+        const firebaseConfig = {
+            apiKey: "AIzaSyDYWLbR1Ud0qwj-6F06rDosta5x_TewD4A",
+            authDomain: "boardcode-b36dd.firebaseapp.com",
+            projectId: "boardcode-b36dd",
+            storageBucket: "boardcode-b36dd.firebasestorage.app",
+            messagingSenderId: "975798164904",
+            appId: "1:975798164904:web:30690a94c69984ece3d19d",
+            measurementId: "G-QLZ1NVXFGH"
+          };
+        // Initialize Firebase
+        this.app = initializeApp(firebaseConfig);
+        this.auth = getAuth(this.app);
     }
 
     /**
-     * Store session data in localStorage
+     * Store session data using Firebase token
      */
-    storeSession(user) {
+    async storeSession(user) {
         if (user) {
-            localStorage.setItem("auth_user", JSON.stringify(user));
+            const token = await user.getIdToken();
+            localStorage.setItem("auth_user", JSON.stringify({
+                uid: user.uid,
+                email: user.email,
+                displayName: user.displayName,
+                token,
+            }));
         } else {
             localStorage.removeItem("auth_user");
         }
     }
 
     /**
-     * Get the current user from localStorage
+     * Get the current user session from localStorage
      */
     getStoredSession() {
         const user = localStorage.getItem("auth_user");
@@ -36,13 +47,16 @@ class AuthService {
      */
     async createAccount({ email, password, name }) {
         try {
-            const user = await this.account.create(ID.unique(), email, password, name);
-            if (user) {
-                const session = await this.account.createEmailPasswordSession(email, password);
-                this.storeSession(user); // Store user in localStorage
-                return { user, session };
+            const userCredential = await createUserWithEmailAndPassword(this.auth, email, password);
+            const user = userCredential.user;
+
+            // Update user profile with display name (optional)
+            if (name) {
+                await user.updateProfile({ displayName: name });
             }
-            return null;
+
+            await this.storeSession(user); // Store user in localStorage
+            return { user };
         } catch (error) {
             console.log("AuthService :: createAccount :: error", error);
             return { error };
@@ -54,10 +68,11 @@ class AuthService {
      */
     async login({ email, password }) {
         try {
-            const session = await this.account.createEmailPasswordSession(email, password);
-            const user = await this.account.get();
-            this.storeSession(user); // Store user in localStorage
-            return { user, session };
+            const userCredential = await signInWithEmailAndPassword(this.auth, email, password);
+            const user = userCredential.user;
+
+            await this.storeSession(user); // Store user in localStorage
+            return { user };
         } catch (error) {
             console.log("AuthService :: login :: error", error);
             return { error };
@@ -65,20 +80,16 @@ class AuthService {
     }
 
     /**
-     * Create a session using Google OAuth
+     * Login with Google OAuth
      */
     async createAccountWithGoogle() {
         try {
-            // Initiate OAuth2 session
-            await this.account.createOAuth2Session(
-                "google",
-                `${window.location.origin}/ide`, // Success URL
-                `${window.location.origin}/` // Failure URL
-            );
+            const provider = new GoogleAuthProvider();
+            const result = await signInWithPopup(this.auth, provider);
+            const user = result.user;
 
-            // After redirect, fetch and store the authenticated user
-            const user = await this.account.get();
-            this.storeSession(user); // Store user in localStorage
+            await this.storeSession(user); // Store user in localStorage
+            return { user };
         } catch (error) {
             console.log("AuthService :: createAccountWithGoogle :: error", error);
             return { error };
@@ -90,7 +101,7 @@ class AuthService {
      */
     async logout() {
         try {
-            await this.account.deleteSessions();
+            await signOut(this.auth);
             this.storeSession(null); // Clear session from localStorage
             window.location.href = "/"; // Redirect to root after logout
         } catch (error) {
@@ -99,18 +110,40 @@ class AuthService {
     }
 
     /**
-     * Get the current user from Appwrite or localStorage
+     * Get the current user from Firebase or localStorage
      */
     async getCurrentUser() {
-        try {
+        return new Promise((resolve) => {
             const storedUser = this.getStoredSession();
-            if (storedUser) return storedUser;
+            if (storedUser) return resolve(storedUser);
 
-            const user = await this.account.get();
-            this.storeSession(user); // Cache user in localStorage
-            return user;
+            onAuthStateChanged(this.auth, async (user) => {
+                if (user) {
+                    await this.storeSession(user); // Cache user in localStorage
+                    resolve(user);
+                } else {
+                    resolve(null);
+                }
+            });
+        });
+    }
+
+    /**
+     * Set session persistence
+     */
+    async setPersistence(type = "local") {
+        try {
+            const persistenceMap = {
+                local: browserLocalPersistence,
+                session: browserSessionPersistence,
+                none: inMemoryPersistence,
+            };
+
+            await setPersistence(this.auth, persistenceMap[type]);
+            console.log(`Persistence set to ${type}`);
         } catch (error) {
-            return null;
+            console.error("AuthService :: setPersistence :: error", error);
+            return { error };
         }
     }
 }
@@ -118,3 +151,9 @@ class AuthService {
 const authService = new AuthService();
 
 export default authService;
+
+
+
+
+
+
