@@ -1,5 +1,17 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, setPersistence, browserLocalPersistence, browserSessionPersistence, inMemoryPersistence } from "firebase/auth";
+import {
+    getAuth,
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    signOut,
+    signInWithPopup,
+    GoogleAuthProvider,
+    onAuthStateChanged,
+    setPersistence,
+    browserLocalPersistence,
+    browserSessionPersistence,
+    inMemoryPersistence
+} from "firebase/auth";
 
 class AuthService {
     constructor() {
@@ -10,11 +22,15 @@ class AuthService {
             storageBucket: "boardcode-b36dd.firebasestorage.app",
             messagingSenderId: "975798164904",
             appId: "1:975798164904:web:30690a94c69984ece3d19d",
-            measurementId: "G-QLZ1NVXFGH"
-          };
+            measurementId: "G-QLZ1NVXFGH",
+        };
+
         // Initialize Firebase
         this.app = initializeApp(firebaseConfig);
         this.auth = getAuth(this.app);
+
+        // Set default session persistence to 'local'
+        this.setPersistence("local");
     }
 
     /**
@@ -45,8 +61,9 @@ class AuthService {
     /**
      * Create a new account
      */
-    async createAccount({ email, password, name }) {
+    async createAccount({ email, password, name, persistence = "local" }) {
         try {
+            await this.setPersistence(persistence); // Set persistence before creating account
             const userCredential = await createUserWithEmailAndPassword(this.auth, email, password);
             const user = userCredential.user;
 
@@ -66,13 +83,13 @@ class AuthService {
     /**
      * Login with email and password
      */
-    async login({ email, password }) {
+    async login({ email, password, persistence = "local" }) {
         try {
+            await this.setPersistence(persistence); // Set persistence before login
             const userCredential = await signInWithEmailAndPassword(this.auth, email, password);
             const user = userCredential.user;
 
             await this.storeSession(user);
-            window.location.href = "/ide"; 
             return { user };
         } catch (error) {
             console.log("AuthService :: login :: error", error);
@@ -83,24 +100,24 @@ class AuthService {
     /**
      * Login with Google OAuth
      */
-    async createAccountWithGoogle() {
+    async createAccountWithGoogle(persistence = "local") {
         try {
+            await this.setPersistence(persistence); // Set persistence before Google login
             const provider = new GoogleAuthProvider();
             const result = await signInWithPopup(this.auth, provider);
             const user = result.user;
-    
+
             await this.storeSession(user);
-    
+
             // Redirect to /ide after successful login
             window.location.href = "/ide";
-    
+
             return { user };
         } catch (error) {
             console.log("AuthService :: createAccountWithGoogle :: error", error);
             return { error };
         }
     }
-    
 
     /**
      * Logout from all sessions
@@ -152,14 +169,16 @@ class AuthService {
             return { error };
         }
     }
+
+    /**
+     * Handle user login with persistence preference
+     */
+    async handleUserLogin({ email, password, rememberMe }) {
+        const persistenceType = rememberMe ? "local" : "session";
+        return this.login({ email, password, persistence: persistenceType });
+    }
 }
 
 const authService = new AuthService();
 
 export default authService;
-
-
-
-
-
-
