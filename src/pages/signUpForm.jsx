@@ -7,6 +7,11 @@ import { useNavigate } from "react-router-dom";
 
 export default function Signup() {
   const [showPassword, setShowPassword] = useState(false);
+    const [rememberMe, setRememberMe] = useState(false);
+  
+    const handleCheckboxChange = (event) => {
+      setRememberMe(event.target.checked); // Toggles the state
+    };
   const nevigate = useNavigate();
   const [ErrorMessage,setErrorMessage] = useState('');
   const handleSubmit = async (e) => {
@@ -103,6 +108,19 @@ export default function Signup() {
                   </button>
                 </div>
               </div>
+
+              <div className="flex items-center">
+                  <input
+                    type="checkbox"
+                    id="remember"
+                    className="h-4 w-4 text-[#A294F9] focus:ring-[#A294F9] border-gray-300 rounded"
+                    checked={rememberMe} // Controlled by state
+                    onChange={handleCheckboxChange} // Updates the state
+                  />
+                  <label htmlFor="remember" className="ml-2 text-sm text-gray-600">
+                    Remember me
+                  </label>
+                </div>
 
               {/* Submit button */}
               <button

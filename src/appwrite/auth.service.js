@@ -12,7 +12,7 @@ import {
     browserSessionPersistence,
     inMemoryPersistence
 } from "firebase/auth";
-
+import { updateProfile } from "firebase/auth";
 class AuthService {
     constructor() {
         const firebaseConfig = {
@@ -61,24 +61,28 @@ class AuthService {
     /**
      * Create a new account
      */
-    async createAccount({ email, password, name, persistence = "local" }) {
-        try {
-            await this.setPersistence(persistence); // Set persistence before creating account
-            const userCredential = await createUserWithEmailAndPassword(this.auth, email, password);
-            const user = userCredential.user;
 
-            // Update user profile with display name (optional)
-            if (name) {
-                await user.updateProfile({ displayName: name });
-            }
 
-            await this.storeSession(user); // Store user in localStorage
-            return { user };
-        } catch (error) {
-            console.log("AuthService :: createAccount :: error", error);
-            return { error };
+async createAccount({ email, password, name, rememberMe=false }) {
+    try {
+        await this.setPersistence(persistence); // Set persistence before creating account
+        const userCredential = await createUserWithEmailAndPassword(this.auth, email, password);
+        const user = userCredential.user;
+
+        // Update user profile with display name
+        if (name) {
+            await updateProfile(user, { displayName: name });
         }
+
+        await this.storeSession(user);
+        await this.handleUserLogin(email , password,rememberMe) // Store user in localStorage
+        return { user };
+    } catch (error) {
+        console.log("AuthService :: createAccount :: error", error);
+        return { error };
     }
+}
+
 
     /**
      * Login with email and password
