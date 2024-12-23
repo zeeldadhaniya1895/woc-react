@@ -20,10 +20,10 @@ const Ide = ({onLogout}) => {
   return (
     <div className="h-screen flex flex-col overflow-hidden">
       {/* Header */}
-      <Navbar onLogout={onLogout} />
+      <Navbar onLogout={onLogout} guest={false} />
       
       {/*Menubar */}
-      <Menubar fileSectionVisible={fileSectionVisible} setFileSectionVisible={setFileSectionVisible} terminalVisible={terminalVisible} setTerminalVisible={setTerminalVisible} setTerminalHeight={setTerminalHeight} />
+      <Menubar fileSectionVisible={fileSectionVisible} setFileSectionVisible={setFileSectionVisible} terminalVisible={terminalVisible} setTerminalVisible={setTerminalVisible} setTerminalHeight={setTerminalHeight} guest={false} />
 
       {/* Main Content */}
       <div className="flex flex-1 relative overflow-hidden bg-gray-800">

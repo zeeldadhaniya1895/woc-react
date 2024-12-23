@@ -6,6 +6,7 @@ import Ide from "./pages/ide.jsx";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import authService from "./appwrite/auth.service.js";
 import { useEffect, useState } from "react";
+import Guest from "./pages/guest.jsx";
 
 function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -42,6 +43,11 @@ function App() {
                     path="/signup"
                     element={isLoggedIn ? <Navigate to="/ide" /> : <Signup />}
                 />
+                <Route
+                    path="/guest"
+                    element={isLoggedIn ? <Navigate to="/ide" /> : <Guest />}
+                />
+
                 <Route
                     path="/ide"
                     element={
