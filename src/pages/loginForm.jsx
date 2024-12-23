@@ -9,6 +9,11 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [ErrorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
+  const [rememberMe, setRememberMe] = useState(false);
+
+  const handleCheckboxChange = (event) => {
+    setRememberMe(event.target.checked); // Toggles the state
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -21,29 +26,34 @@ export default function Login() {
     }
 
     try {
-      const response = await authService.login({
+      const response = await authService.handleUserLogin({
         email: email.value,
         password: password.value,
+        rememberMe: rememberMe,
       });
 
-      if (response) {
+      if (response.error) {
+        
+        if (error.code === 401) {
+          email.value = '';
+          password.value = '';
+          setErrorMessage("Invalid email or password");
+        } else if (error.message.includes('email')) {
+          email.value = '';
+          password.value = '';
+          setErrorMessage("Invalid email format");
+        } else if (error.message.includes('password')) {
+          password.value = '';
+          setErrorMessage("Invalid password");
+        } else {
+          setErrorMessage("Login failed. Please try again.");
+        }
+      }
+      else {
         navigate("/ide");
       }
     } catch (error) {
-      if (error.code === 401) {
-        email.value = '';
-        password.value = '';
-        setErrorMessage("Invalid email or password");
-      } else if (error.message.includes('email')) {
-        email.value = '';
-        password.value = '';
-        setErrorMessage("Invalid email format");
-      } else if (error.message.includes('password')) {
-        password.value = '';
-        setErrorMessage("Invalid password");
-      } else {
-        setErrorMessage("Login failed. Please try again.");
-      }
+      setErrorMessage("An error occurred. Please try again.",error);
     }
   };
 
@@ -111,6 +121,8 @@ export default function Login() {
                     type="checkbox"
                     id="remember"
                     className="h-4 w-4 text-[#A294F9] focus:ring-[#A294F9] border-gray-300 rounded"
+                    checked={rememberMe} // Controlled by state
+                    onChange={handleCheckboxChange} // Updates the state
                   />
                   <label htmlFor="remember" className="ml-2 text-sm text-gray-600">
                     Remember me
@@ -145,7 +157,7 @@ export default function Login() {
               <button
                 type="button"
                 className="flex items-center justify-center w-full bg-[#E5D9F2] text-gray-700 py-2 rounded-md hover:bg-[#CDC1FF] focus:outline-none focus:ring-2 focus:ring-[#A294F9] focus:ring-offset-1"
-                onClick={async() => { await authService.createAccountWithGoogle() }}
+                onClick={async () => { await authService.createAccountWithGoogle() }}
               >
                 <FcGoogle className="w-5 h-5 mr-2" />
                 Continue with Google
