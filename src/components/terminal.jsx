@@ -61,7 +61,7 @@ export default function InputOutputTerminal({ terminalHeight, setTerminalHeight,
       <Split
         className="flex flex-row h-full"
         sizes={[50, 50]} // Default 50-50 split
-        minSize={200} // Minimum size for each section
+        minSize={375} // Minimum size for each section
         gutterSize={10} // Space for the draggable gutter
         gutterAlign="center"
         snapOffset={0}
@@ -91,8 +91,11 @@ export default function InputOutputTerminal({ terminalHeight, setTerminalHeight,
 
         {/* Output Section */}
         <div
-          className={`bg-gray-800 p-3 rounded text-sm overflow-auto flex flex-col border-l-4 ${
-            code === 0 ? "border-green-500" : "border-red-500"
+          className={`bg-gray-800 p-3 rounded text-sm overflow-auto flex flex-col border-l-4 border-gray-400 ${
+            code === 0 ? "border-green-500" : ""
+          }
+          ${
+            code === 1 ? "border-red-500":""
           }`}
         >
           <div className="flex items-center justify-between mb-2">
@@ -106,8 +109,10 @@ export default function InputOutputTerminal({ terminalHeight, setTerminalHeight,
             </button>
           </div>
           <div
-            className={`flex-1 bg-gray-700 p-2 rounded text-sm overflow-auto ${
-              code === 0 ? "text-green-400" : "text-red-400"
+            className={`flex-1 bg-gray-700 p-2 rounded text-sm overflow-auto text-gray-200 ${
+              code === 0 ? "text-green-400" : ""
+            }${
+              code === 1 ? "text-red-400":""
             }`}
             style={{ whiteSpace: "pre-wrap" }}
           >
