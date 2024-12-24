@@ -41,6 +41,7 @@ const Ide = ({ onLogout }) => {
           <Filerbar
             fileSectionWidth={fileSectionWidth}
             setFileSectionWidth={setFileSectionWidth}
+            setFileSectionVisible={setFileSectionVisible}
             style={{
               zIndex:10000,
             }}
