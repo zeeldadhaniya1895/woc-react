@@ -91,12 +91,11 @@ export default function InputOutputTerminal({ terminalHeight, setTerminalHeight,
 
         {/* Output Section */}
         <div
-          className={`bg-gray-800 p-3 rounded text-sm overflow-auto flex flex-col border-l-4 border-gray-400 ${
-            code === 0 ? "border-green-500" : ""
-          }
-          ${
-            code === 1 ? "border-red-500":""
-          }`}
+          className={`bg-gray-800 p-3 rounded text-sm overflow-auto flex flex-col border-l-4 border-gray-200 ${
+              code === 0 ? "border-green-400" : ""
+            }${
+              code === 1 ? "border-red-400":""
+            }`}
         >
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-lg font-bold text-white">Output</h3>
