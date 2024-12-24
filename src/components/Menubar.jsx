@@ -22,7 +22,7 @@ import { FaBars, FaTerminal, FaPlay, FaCode, FaPalette, FaLanguage } from "react
 import {setAll,setOutput} from "../store/apiResponseSlice";
 
 // Main Menubar component
-export default function Menubar({ fileSectionVisible, setFileSectionVisible, terminalVisible, setTerminalVisible, setTerminalHeight,guest }) {
+export default function Menubar({ fileSectionVisible, setFileSectionVisible, terminalVisible, setTerminalVisible, setTerminalHeight,guest,onCreateEditor,onAddEditor }) {
   // Initialize Redux dispatch
   const dispatch = useDispatch();
   
@@ -30,7 +30,7 @@ export default function Menubar({ fileSectionVisible, setFileSectionVisible, ter
   const [loading, setLoading] = useState(false);
   const [isThemeDropdownVisible, setThemeDropdownVisible] = useState(false);
   const [isLanguageDropdownVisible, setLanguageDropdownVisible] = useState(false);
-  
+
   // Available themes object
   const themes = {
     oneDark,
@@ -56,11 +56,25 @@ export default function Menubar({ fileSectionVisible, setFileSectionVisible, ter
   const handleLanguageChange = (e) => {
     dispatch(setEditorLanguage(e.target.value));
     setLanguageDropdownVisible(false);
-  };
-
+  }; 
+  
   // Handler for line wrapping toggle
   const handleLineWrapping = () => {
     dispatch(toggleLineWrapping());
+  };
+
+  // const handleNewEditor = () => {
+  //   const fileName = prompt("Enter file name:");
+  //   const language = prompt("Enter language (e.g., javascript, python):");
+  //   if (fileName && language) {
+  //     onCreateEditor({ fileName, language });
+  //   }
+  // };
+
+  const handleNewEditor = () => {
+    const fileName = prompt("Enter file name:");
+    // if (!fileName) return; // Ensure the file name is provided
+    setLanguageDropdownVisible(true);
   };
 
   // Function to execute code
@@ -152,6 +166,16 @@ export default function Menubar({ fileSectionVisible, setFileSectionVisible, ter
           </select>
         </div>
       </div>
+      
+      {/*Add a button for adding new code editors */}
+<button
+  onClick={handleNewEditor}
+  className="p-2 bg-blue-600 text-white rounded-full hover:bg-blue-500 flex items-center justify-center shadow-md"
+>
+  <FaCode className="text-lg" />
+  <span className="hidden sm:inline ml-2">New Editor</span>
+</button>
+
 
       {/* Right Section */}
       <div className="flex items-center space-x-2">

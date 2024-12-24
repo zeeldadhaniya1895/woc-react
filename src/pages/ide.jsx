@@ -16,6 +16,20 @@ const Ide = ({onLogout}) => {
   const [fileSectionWidth, setFileSectionWidth] = useState(250);
   const [terminalVisible, setTerminalVisible] = useState(false);
   const [terminalHeight, setTerminalHeight] = useState(250);
+  const [editors, setEditors] = useState([]); // Array of editors
+  const [activeEditor, setActiveEditor] = useState(null); // Active editor
+
+
+  const handleCreateEditor = ({ fileName, language }) => {
+    const newEditor = {
+      id: editors.length,
+      fileName,
+      language,
+      content: "", // Initial empty content
+    };
+    setEditors((prevEditors) => [...prevEditors, newEditor]);
+    setActiveEditor(newEditor.id); // Automatically open the newly created file
+  };
 
   return (
     <div className="h-screen flex flex-col overflow-hidden">
@@ -23,8 +37,9 @@ const Ide = ({onLogout}) => {
       <Navbar onLogout={onLogout} guest={false} />
       
       {/*Menubar */}
-      <Menubar fileSectionVisible={fileSectionVisible} setFileSectionVisible={setFileSectionVisible} terminalVisible={terminalVisible} setTerminalVisible={setTerminalVisible} setTerminalHeight={setTerminalHeight} guest={false} />
-
+      <Menubar fileSectionVisible={fileSectionVisible} setFileSectionVisible={setFileSectionVisible} terminalVisible={terminalVisible} setTerminalVisible={setTerminalVisible} setTerminalHeight={setTerminalHeight} guest={false} 
+      onCreateEditor={handleCreateEditor}
+       />
       {/* Main Content */}
       <div className="flex flex-1 relative overflow-hidden bg-gray-800">
         

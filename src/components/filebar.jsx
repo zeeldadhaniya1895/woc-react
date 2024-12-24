@@ -3,7 +3,7 @@ import React from 'react'
 import { Rnd} from 'react-rnd'
 
 // Export default Filebar component that takes fileSectionWidth and setFileSectionWidth as props
-export default function Filerbar({fileSectionWidth,setFileSectionWidth}) {
+export default function Filerbar({fileSectionWidth,setFileSectionWidth,editors,activeEditor,setActiveEditor}) {
   return (
     // Resizable component with specific configurations
     <Rnd
@@ -26,6 +26,15 @@ export default function Filerbar({fileSectionWidth,setFileSectionWidth}) {
           >
             {/* Sidebar title */}
             <h3 className="text-gray-400">Sidebar</h3>
+            {editors.map((editor, index) => (
+        <div
+          key={index}
+          className={`file-item ${activeEditor === index ? "active" : ""}`}
+          onClick={() => setActiveEditor(index)}
+        >
+          {editor.fileName}
+        </div>
+      ))}
     </Rnd>
         
   )
