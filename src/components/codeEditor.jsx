@@ -17,7 +17,7 @@ import {cpp} from "@codemirror/lang-cpp"
 import { python } from "@codemirror/lang-python";
 import { themess } from "../config/theme";
 // Updated imports for folding and bracket matching
-import { indentOnInput, bracketMatching, syntaxHighlighting } from "@codemirror/language";
+import { indentOnInput, bracketMatching} from "@codemirror/language";
 import { highlightSelectionMatches } from "@codemirror/search";
 import { autocompletion } from "@codemirror/autocomplete";
 import { lintGutter, linter } from "@codemirror/lint";
@@ -74,12 +74,6 @@ export default function CodeEditor({ fileSectionWidth, fileSectionVisible }) {
   const { theme, themec, language, codeSnippet, isLineWrapping, icon, info } =
     useSelector((state) => state.var.editor);
 
-  useEffect(() => {
-    const savedCode = sessionStorage.getItem("codeSnippet");
-    if (savedCode) {
-      dispatch(setEditorCode(savedCode));
-    }
-  }, [dispatch]);
 
   const themes = {
     oneDark,
@@ -170,3 +164,5 @@ export default function CodeEditor({ fileSectionWidth, fileSectionVisible }) {
     </div>
   );
 }
+
+// AIzaSyDwVqDCij1YkKrKkJ2xLB5TN2inxMYTCs4
