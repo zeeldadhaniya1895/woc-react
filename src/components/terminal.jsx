@@ -49,7 +49,7 @@ export default function InputOutputTerminal({ terminalHeight, setTerminalHeight,
       size={{ height: terminalHeight, width: "100%" }}
       maxHeight={735}
       minHeight={100}
-      position={{ x: 0, y: window.innerHeight - terminalHeight }}
+      position={{ x: 0, y: window.innerHeight - terminalHeight-0.5 }}
       onResizeStop={(e, direction, ref) => {
         setTerminalHeight(ref.offsetHeight);
       }}
