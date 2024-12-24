@@ -1,8 +1,8 @@
-// components/InputOutputTerminal.jsx
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setInput } from "../store/apiResponseSlice";
 import { Rnd } from "react-rnd";
+import Split from "react-split";
 import { FaTimes } from "react-icons/fa";
 
 export default function InputOutputTerminal({ terminalHeight, setTerminalHeight, setTerminalVisible }) {
@@ -49,7 +49,7 @@ export default function InputOutputTerminal({ terminalHeight, setTerminalHeight,
       size={{ height: terminalHeight, width: "100%" }}
       maxHeight={735}
       minHeight={100}
-      position={{ x: 0, y: window.innerHeight - terminalHeight - 0.05 }}
+      position={{ x: 0, y: window.innerHeight - terminalHeight }}
       onResizeStop={(e, direction, ref) => {
         setTerminalHeight(ref.offsetHeight);
       }}
@@ -57,9 +57,20 @@ export default function InputOutputTerminal({ terminalHeight, setTerminalHeight,
       enableResizing={{ top: true }}
       disableDragging={true}
     >
-      <div className="flex flex-row h-full">
+      {/* Resizable horizontal split between Input and Output */}
+      <Split
+        className="flex flex-row h-full"
+        sizes={[50, 50]} // Default 50-50 split
+        minSize={200} // Minimum size for each section
+        gutterSize={10} // Space for the draggable gutter
+        gutterAlign="center"
+        snapOffset={0}
+        direction="horizontal"
+        cursor="col-resize"
+        style={{ display: "flex" }}
+      >
         {/* Input Section */}
-        <div className="w-1/2 bg-gray-800 p-3 rounded text-sm overflow-auto flex flex-col">
+        <div className="bg-gray-800 p-3 rounded text-sm overflow-auto flex flex-col">
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-lg font-bold text-white">Input</h3>
             <input
@@ -80,35 +91,30 @@ export default function InputOutputTerminal({ terminalHeight, setTerminalHeight,
 
         {/* Output Section */}
         <div
-          className={`w-1/2 bg-gray-800 p-3 rounded text-sm overflow-auto flex flex-col border-l-4 border-gray-300 ${
-            code === 0 ? "border-green-500" : ""
-          }
-          ${
-            code === 1 ? "border-red-500":""
+          className={`bg-gray-800 p-3 rounded text-sm overflow-auto flex flex-col border-l-4 ${
+            code === 0 ? "border-green-500" : "border-red-500"
           }`}
         >
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-lg font-bold text-white">Output</h3>
             <button
-                    className="absolute top-3 right-3 text-gray-400 hover:text-red-500 transition-colors"
-                    onClick={handleCloseTerminal}
-                    title="Close Sidebar"
-                  >
-                    <FaTimes className="w-5 h-5" />
-                  </button>
+              className="text-gray-400 hover:text-red-500 transition-colors"
+              onClick={handleCloseTerminal}
+              title="Close Terminal"
+            >
+              <FaTimes className="w-5 h-5" />
+            </button>
           </div>
           <div
-            className={`flex-1 bg-gray-700 p-2 rounded text-sm overflow-auto text-gray-200 ${
-              code === 0 ? "text-green-400" : ""
-            }${
-              code === 1 ? "text-red-400" : ""
+            className={`flex-1 bg-gray-700 p-2 rounded text-sm overflow-auto ${
+              code === 0 ? "text-green-400" : "text-red-400"
             }`}
             style={{ whiteSpace: "pre-wrap" }}
           >
             {output || "Output will be shown here."}
           </div>
         </div>
-      </div>
+      </Split>
     </Rnd>
   );
 }
