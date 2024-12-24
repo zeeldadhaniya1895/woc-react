@@ -56,13 +56,14 @@ export default function InputOutputTerminal({ terminalHeight, setTerminalHeight,
       size={{ height: terminalHeight, width: "100%" }}
       maxHeight={735}
       minHeight={100}
-      position={{ x: 0, y: window.innerHeight - terminalHeight - 3 }}
+      position={{ x:0, y: window.innerHeight - terminalHeight-0.05 }}
       onResizeStop={(e, direction, ref) => {
         setTerminalHeight(ref.offsetHeight);
       }}
       className="bg-gray-900 border-t border-gray-700 text-gray-400 flex flex-col absolute bottom-0"
       enableResizing={{ top: true }}
       disableDragging={true}
+      
     >
       <div className="flex flex-row h-full">
         {/* Input Section with file upload and text input functionality */}
