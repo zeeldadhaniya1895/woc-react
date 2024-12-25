@@ -12,11 +12,11 @@ const Guest = ({onLogout}) => {
   const [terminalHeight, setTerminalHeight] = useState(250);
 
   return (
-    <div className="h-screen flex flex-col overflow-hidden border-2 border-black shadow-lg"
+    <div className="h-screen flex flex-col overflow-hidden border-2 border-b-0 border-purple-800 shadow-lg border-r-purple-300"
     style={{
       background: "linear-gradient(135deg, #1E1E2E, #2A2A3D)",
       boxShadow: "0 4px 15px rgba(0, 0, 0, 0.3)",
-      borderColor: "#6A0DAD",
+      
     }}>
       {/* Header */}
       <Navbar onLogout={onLogout} guest={true} />

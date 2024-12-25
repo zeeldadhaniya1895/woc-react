@@ -4,7 +4,6 @@ import Filerbar from "../components/filebar";
 import CodeEditor from "../components/codeEditor";
 import Terminal from "../components/terminal";
 import Menubar from "../components/Menubar";
-import zIndex from "@mui/material/styles/zIndex";
 
 const Ide = ({ onLogout }) => {
   const [fileSectionVisible, setFileSectionVisible] = useState(true);
