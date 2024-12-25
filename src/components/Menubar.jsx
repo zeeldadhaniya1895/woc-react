@@ -21,8 +21,12 @@ import {
 import { FaBars, FaTerminal, FaPlay, FaCode, FaPalette, FaLanguage } from "react-icons/fa";
 import {setAll,setOutput} from "../store/apiResponseSlice";
 
+
+
+
+
 // Main Menubar component
-export default function Menubar({ fileSectionVisible, setFileSectionVisible, terminalVisible, setTerminalVisible, setTerminalHeight,guest }) {
+export default function Menubar({ fileSectionVisible, setFileSectionVisible, terminalVisible, setTerminalVisible, setTerminalHeight,guest,onCreateEditor }) {
   // Initialize Redux dispatch
   const dispatch = useDispatch();
   
@@ -30,7 +34,9 @@ export default function Menubar({ fileSectionVisible, setFileSectionVisible, ter
   const [loading, setLoading] = useState(false);
   const [isThemeDropdownVisible, setThemeDropdownVisible] = useState(false);
   const [isLanguageDropdownVisible, setLanguageDropdownVisible] = useState(false);
-  
+  const [isLanguageDropdownVisible2, setLanguageDropdownVisible2] = useState(false);
+  const [fileName, setFileName] = useState(null);
+
   // Available themes object
   const themes = {
     oneDark,
@@ -58,10 +64,36 @@ export default function Menubar({ fileSectionVisible, setFileSectionVisible, ter
     setLanguageDropdownVisible(false);
   };
 
+  const handleLanguageChange2 = (e) => {
+    setLanguageDropdownVisible2(false); // Hide the dropdown
+    const selectedLanguage = e.target.value;
+    console.log(fileName,selectedLanguage);
+    if (fileName && selectedLanguage) {
+      dispatch(setEditorLanguage(e.target.value)); // Update Redux store
+      onCreateEditor({ fileName, language: selectedLanguage }); // Create editor
+      console.log(fileName,selectedLanguage);
+      // dispatch(setEditorLanguage(selectedLanguage)); // Update Redux store
+      
+      setFileName(null); // Reset file name state
+    }
+  };
+
   // Handler for line wrapping toggle
   const handleLineWrapping = () => {
     dispatch(toggleLineWrapping());
   };
+
+
+ const handleNewEditor = () => {
+    const name = prompt("Enter file name:");
+    if (name) {
+
+      setFileName(name);
+      setLanguageDropdownVisible2(true); 
+     // Show the dropdown
+    }
+  };
+
 
   // Function to execute code
   const runCode = async () => {
@@ -129,6 +161,7 @@ export default function Menubar({ fileSectionVisible, setFileSectionVisible, ter
           </select>
         </div>
 
+        
         {/* Theme Dropdown */}
         <div className="relative">
           <button
@@ -153,6 +186,32 @@ export default function Menubar({ fileSectionVisible, setFileSectionVisible, ter
         </div>
       </div>
 
+
+    {/*Add a button for adding new code editors */}
+    <button
+  onClick={handleNewEditor}
+  className="p-2 bg-blue-600 text-white rounded-full hover:bg-blue-500 flex items-center justify-center shadow-md"
+>
+  <FaCode className="text-lg" />
+  <span className="hidden sm:inline ml-2">New Editor</span>
+</button>
+
+  {/* Language Dropdown */}
+  {isLanguageDropdownVisible2 && (
+    <div className="absolute bg-gray-800 text-white p-4 rounded shadow-md">
+      <label className="block mb-2">Select Language:</label>
+      <select
+        className="px-2 py-1 bg-gray-700 rounded"
+        onChange={handleLanguageChange2}
+      >
+        {LANGUAGE_DATA.map((lang, index) => (
+          <option key={index} value={lang.language}>
+            {lang.language.toUpperCase()} (v{lang.version})
+          </option>
+        ))}
+      </select>
+    </div>
+  )}
       {/* Right Section */}
       <div className="flex items-center space-x-2">
         {/* Line wrapping toggle button */}

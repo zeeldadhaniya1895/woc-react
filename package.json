@@ -43,6 +43,7 @@
     "appwrite": "^16.0.2",
     "axios": "^1.7.9",
     "codemirror": "^6.0.1",
+    "express": "^4.21.2",
     "firebase": "^11.1.0",
     "framer-motion": "^11.15.0",
     "openai": "^4.77.0",

@@ -1,32 +1,57 @@
-// Import React and react-rnd components
-import React from 'react'
-import { Rnd} from 'react-rnd'
+import React, { useEffect, useState } from "react";
+import { Rnd } from "react-rnd";
+import { fetchEditors } from "../API/api";
+import authService from "../appwrite/auth.service";
 
-// Export default Filebar component that takes fileSectionWidth and setFileSectionWidth as props
-export default function Filerbar({fileSectionWidth,setFileSectionWidth}) {
+export default function Filebar({ fileSectionWidth, setFileSectionWidth }) {
+  const [editors, setEditors] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Fetch the current user
+        const currentUser = await authService.getCurrentUser();
+        if (!currentUser) {
+          console.error("No user logged in");
+          setLoading(false);
+          return;
+        }
+
+        // Fetch editors for the current user
+        const editorsData = await fetchEditors(currentUser.uid);
+        setEditors(editorsData);
+      } catch (error) {
+        console.error("Error fetching editors or user:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return <div className="bg-gray-900 border-r border-gray-700 text-gray-400 flex flex-col justify-start items-center p-4">Loading...</div>; // Display loading state
+  }
+
   return (
-    // Resizable component with specific configurations
     <Rnd
-            // Set initial size with width from props and full height
-            size={{ width: fileSectionWidth, height: "100%" }}
-            // Set minimum width constraint
-            minWidth={150}
-            // Set maximum width constraint
-            maxWidth={400}
-            // Enable resizing only from right side
-            enableResizing={{ right: true }}
-            // Disable dragging functionality
-            disableDragging={true}
-            // Handle resize stop event and update width
-            onResizeStop={(e, direction, ref) => {
-              setFileSectionWidth(ref.offsetWidth);
-            }}
-            // Apply styling classes for appearance
-            className="bg-gray-900 border-r border-gray-700 flex flex-col justify-start items-center p-4"
-          >
-            {/* Sidebar title */}
-            <h3 className="text-gray-400">Sidebar</h3>
+      size={{ width: fileSectionWidth, height: "100%" }}
+      minWidth={150}
+      maxWidth={400}
+      enableResizing={{ right: true }}
+      disableDragging={true}
+      onResizeStop={(e, direction, ref) => setFileSectionWidth(ref.offsetWidth)}
+      className="bg-gray-900 border-r border-gray-700 flex flex-col justify-start items-center p-4"
+    >
+      <h3 className="text-gray-400">Sidebar</h3>
+      <hr />
+      <ol>
+        {editors.map((fileName, index) => (
+          <li key={index}>{fileName}</li>
+        ))}
+      </ol>
     </Rnd>
-        
-  )
+  );
 }
