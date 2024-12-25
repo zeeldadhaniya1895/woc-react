@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Rnd } from "react-rnd";
 import { fetchEditors } from "../API/api";
+import { FaTimes } from "react-icons/fa";
 import authService from "../appwrite/auth.service";
 
 export default function Filebar({ fileSectionWidth, setFileSectionWidth }) {

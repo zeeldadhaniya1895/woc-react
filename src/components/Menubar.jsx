@@ -1,36 +1,21 @@
-// Import necessary dependencies from react-redux and react
 import { useSelector, useDispatch } from "react-redux";
 import { useState } from "react";
-
-// Import theme-related dependencies
 import { oneDark } from "@codemirror/theme-one-dark";
 import { boysAndGirls, ayuLight, barf, cobalt, clouds } from "thememirror";
-
-// Import constants and API functions
 import { LANGUAGE_DATA } from "../config/constants";
 import { executeCode } from "../API/api";
-
-// Import Redux actions
 import {
   setEditorTheme,
   setEditorLanguage,
   toggleLineWrapping,
 } from "../store/varSlice";
-
-// Import icons from react-icons
 import { FaBars, FaTerminal, FaPlay, FaCode, FaPalette, FaLanguage } from "react-icons/fa";
-import {setAll,setOutput} from "../store/apiResponseSlice";
-
-
-
-
+import { setAll, setOutput } from "../store/apiResponseSlice";
 
 // Main Menubar component
 export default function Menubar({ fileSectionVisible, setFileSectionVisible, terminalVisible, setTerminalVisible, setTerminalHeight,guest,onCreateEditor }) {
   // Initialize Redux dispatch
   const dispatch = useDispatch();
-  
-  // Local state management
   const [loading, setLoading] = useState(false);
   const [isThemeDropdownVisible, setThemeDropdownVisible] = useState(false);
   const [isLanguageDropdownVisible, setLanguageDropdownVisible] = useState(false);
@@ -52,13 +37,11 @@ export default function Menubar({ fileSectionVisible, setFileSectionVisible, ter
     useSelector((state) => state.var.editor);
   const {input} = useSelector((state) => state.response);
 
-  // Handler for theme changes
   const handleThemeChange = (e) => {
     dispatch(setEditorTheme(e.target.value));
     setThemeDropdownVisible(false);
   };
 
-  // Handler for language changes
   const handleLanguageChange = (e) => {
     dispatch(setEditorLanguage(e.target.value));
     setLanguageDropdownVisible(false);
@@ -78,7 +61,6 @@ export default function Menubar({ fileSectionVisible, setFileSectionVisible, ter
     }
   };
 
-  // Handler for line wrapping toggle
   const handleLineWrapping = () => {
     dispatch(toggleLineWrapping());
   };
@@ -95,45 +77,42 @@ export default function Menubar({ fileSectionVisible, setFileSectionVisible, ter
   };
 
 
-  // Function to execute code
   const runCode = async () => {
     setLoading(true);
     setTerminalVisible(true);
     dispatch(setOutput("Loading..."));
     try {
       const result = await executeCode(language, version, codeSnippet, input);
-      dispatch(setAll(result)); // Update Redux store
+      dispatch(setAll(result));
     } catch (error) {
       console.error("Run Code error:", error);
       dispatch(setAll({ output: "Error executing code", code: 1 }));
     } finally {
       setLoading(false);
-      
     }
   };
-  
-  // Component render
+
   return (
-    // Main container
-    <div className="bg-gray-900 text-white px-2 py-2 flex flex-wrap justify-between items-center border-b border-gray-700">
+    <div className="bg-gray-900 text-white px-3 py-2 flex justify-between items-center border border-gray-700 shadow-md">
       {/* Left Section */}
-      <div className="flex items-center space-x-2 mb-2 sm:mb-0">
-        {/* File section toggle button */}
-        {
-          guest ? null :(
-          <button onClick={() => setFileSectionVisible(!fileSectionVisible)}
-          className="p-2 bg-gray-700 text-white rounded-full hover:bg-gray-600 flex items-center justify-center shadow-md">
-          <FaBars className="text-lg" />
-          </button>)
-        }
-        
-        {/* Terminal toggle button */}
+      <div className="flex items-center space-x-3">
+        {/* File Section Toggle */}
+        {!guest && (
+          <button
+            onClick={() => setFileSectionVisible(!fileSectionVisible)}
+            className="p-2 bg-gray-800 text-white rounded-md hover:bg-purple-500 transition-all shadow-md"
+          >
+            <FaBars className="text-lg" />
+          </button>
+        )}
+
+        {/* Terminal Toggle */}
         <button
           onClick={() => {
             setTerminalVisible(!terminalVisible);
             setTerminalHeight(250);
           }}
-          className="p-2 bg-gray-700 text-white rounded-full hover:bg-gray-600 flex items-center justify-center shadow-md"
+          className="p-2 bg-gray-800 text-white rounded-md hover:bg-purple-500 transition-all shadow-md"
         >
           <FaTerminal className="text-lg" />
         </button>
@@ -142,12 +121,12 @@ export default function Menubar({ fileSectionVisible, setFileSectionVisible, ter
         <div className="relative">
           <button
             onClick={() => setLanguageDropdownVisible(!isLanguageDropdownVisible)}
-            className="p-2 bg-gray-700 text-white rounded-full hover:bg-gray-600 flex items-center justify-center shadow-md sm:hidden"
+            className="p-2 bg-gray-800 text-white rounded-md hover:bg-purple-500 shadow-md sm:hidden"
           >
             <FaLanguage />
           </button>
           <select
-            className={`px-2 py-1 bg-gray-800 text-white rounded shadow-md focus:ring focus:ring-blue-500 ${
+            className={`px-2 py-1 bg-gray-700 text-white rounded-md shadow-md focus:ring focus:ring-purple-400 ${
               isLanguageDropdownVisible ? "block" : "hidden sm:block"
             }`}
             value={language}
@@ -163,15 +142,72 @@ export default function Menubar({ fileSectionVisible, setFileSectionVisible, ter
 
         
         {/* Theme Dropdown */}
-        <div className="relative">
+        
+      </div>
+
+      <button
+  className={`relative flex items-center gap-2 justify-center w-auto px-4 py-2 rounded-full ${
+    loading
+      ? "bg-blue-600 cursor-not-allowed opacity-80"
+      : "bg-gradient-to-br from-green-500 to-green-600 hover:from-green-400 hover:to-green-500"
+  } shadow-md hover:shadow-lg active:scale-95 transition-all`}
+  onClick={runCode}
+  disabled={loading}
+>
+  {loading ? (
+    <>
+      <svg
+        className="animate-spin w-5 h-5 text-white"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+      >
+        <circle
+          className="opacity-25"
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="currentColor"
+          strokeWidth="4"
+        ></circle>
+        <path
+          className="opacity-75"
+          fill="currentColor"
+          d="M4 12a8 8 0 018-8v4a4 4 0 100 8h4a8 8 0 01-8 8v-4a4 4 0 100-8H4z"
+        ></path>
+      </svg>
+      <span className="text-sm font-medium text-white">Running...</span>
+    </>
+  ) : (
+    <>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className="w-5 h-5 text-white"
+        viewBox="0 0 24 24"
+        fill="currentColor"
+      >
+        <path d="M9.75 6.75a.75.75 0 011.074-.659l8.5 4.75a.75.75 0 010 1.318l-8.5 4.75a.75.75 0 01-1.124-.659V6.75z" />
+      </svg>
+      <span className="text-sm font-medium text-white">Run Code</span>
+    </>
+  )}
+</button>
+
+
+
+
+      {/* Right Section */}
+      <div className="flex items-center space-x-3">
+
+      <div className="relative">
           <button
             onClick={() => setThemeDropdownVisible(!isThemeDropdownVisible)}
-            className="p-2 bg-gray-700 text-white rounded-full hover:bg-gray-600 flex items-center justify-center shadow-md sm:hidden"
+            className="p-2 bg-gray-800 text-white rounded-md hover:bg-purple-500 shadow-md sm:hidden"
           >
             <FaPalette />
           </button>
           <select
-            className={`px-2 py-1 bg-gray-800 text-white rounded shadow-md focus:ring focus:ring-blue-500 ${
+            className={`px-2 py-1 bg-gray-700 text-white rounded-md shadow-md focus:ring focus:ring-purple-400 ${
               isThemeDropdownVisible ? "block" : "hidden sm:block"
             }`}
             value={theme}
@@ -216,22 +252,17 @@ export default function Menubar({ fileSectionVisible, setFileSectionVisible, ter
       <div className="flex items-center space-x-2">
         {/* Line wrapping toggle button */}
         <button
-          className="px-3 py-1 bg-gray-500 text-white rounded shadow-md flex items-center space-x-1 hover:bg-gray-400 focus:outline-none focus:ring focus:ring-gray-300"
+          className="px-4 py-1 bg-gray-700 text-white rounded-md hover:bg-cyan-500 transition-all shadow-md flex items-center space-x-2"
           onClick={handleLineWrapping}
         >
           <FaCode />
-          <span className="hidden sm:inline">{isLineWrapping ? "Disable Wrapping" : "Enable Wrapping"}</span>
+          <span className="hidden sm:inline">
+            {isLineWrapping ? "Disable Wrapping" : "Enable Wrapping"}
+          </span>
         </button>
 
-        {/* Run code button */}
-        <button
-          className={`px-3 py-1 ${loading ? "bg-green-700" : "bg-green-500"} text-white rounded shadow-md flex items-center space-x-1 hover:bg-green-400 focus:outline-none focus:ring focus:ring-green-300`}
-          onClick={runCode}
-          disabled={loading}
-        >
-          <FaPlay />
-          <span className="hidden md:inline ">{loading ? "Running..." : "Run Code"}</span>
-        </button>
+        {/* Run Code */}
+              
       </div>
     </div>
   );
