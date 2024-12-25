@@ -26,3 +26,38 @@ export const executeCode = async (language, version, sourceCode, codeInput = "")
   }
 };
 
+
+export const addEditor = async (userId, editor) => {
+  try {
+    await axios.post("http://localhost:5000/addEditor", { userId, editor });
+  } catch (error) {
+    console.error("Error adding editor:", error);
+  }
+};
+
+export const updateEditor = async (userId, editorId, code) => {
+  try {
+    await axios.put("http://localhost:5000/updateEditor", { userId, editorId, code });
+  } catch (error) {
+    console.error("Error updating editor:", error);
+  }
+};
+
+export const deleteEditor = async (userId, editorId) => {
+  try {
+    await axios.delete("http://localhost:5000/deleteEditor", { data: { userId, editorId } });
+  } catch (error) {
+    console.error("Error deleting editor:", error);
+  }
+};
+
+// only give the list of filename of all the editors of a user
+export const fetchEditors = async (userId) => {
+  try {
+    const response = await axios.get(`http://localhost:5000/getEditors/${userId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching editors:", error);
+    return [];
+  }
+};

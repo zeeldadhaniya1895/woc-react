@@ -22,16 +22,11 @@ const Ide = ({ onLogout }) => {
     >
       {/* Header */}
       <Navbar onLogout={onLogout} guest={false} />
-
-      {/* Menubar */}
-      <Menubar
-        fileSectionVisible={fileSectionVisible}
-        setFileSectionVisible={setFileSectionVisible}
-        terminalVisible={terminalVisible}
-        setTerminalVisible={setTerminalVisible}
-        setTerminalHeight={setTerminalHeight}
-        guest={false}
-      />
+      
+      {/*Menubar */}
+      <Menubar fileSectionVisible={fileSectionVisible} setFileSectionVisible={setFileSectionVisible} terminalVisible={terminalVisible} setTerminalVisible={setTerminalVisible} setTerminalHeight={setTerminalHeight} guest={false}
+      // onCreateEditor={handleCreateEditor}
+       />
 
       {/* Main Content */}
       <div className="flex flex-1 relative overflow-hidden bg-gray-800">

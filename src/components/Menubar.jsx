@@ -12,25 +12,30 @@ import {
 import { FaBars, FaTerminal, FaPlay, FaCode, FaPalette, FaLanguage } from "react-icons/fa";
 import { setAll, setOutput } from "../store/apiResponseSlice";
 
-export default function Menubar({
-  fileSectionVisible,
-  setFileSectionVisible,
-  terminalVisible,
-  setTerminalVisible,
-  setTerminalHeight,
-  guest,
-}) {
+// Main Menubar component
+export default function Menubar({ fileSectionVisible, setFileSectionVisible, terminalVisible, setTerminalVisible, setTerminalHeight,guest,onCreateEditor }) {
+  // Initialize Redux dispatch
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [isThemeDropdownVisible, setThemeDropdownVisible] = useState(false);
   const [isLanguageDropdownVisible, setLanguageDropdownVisible] = useState(false);
+  const [isLanguageDropdownVisible2, setLanguageDropdownVisible2] = useState(false);
+  const [fileName, setFileName] = useState(null);
 
-  const themes = { oneDark, boysAndGirls, ayuLight, barf, cobalt, clouds };
-
-  const { theme, language, codeSnippet, isLineWrapping, version } = useSelector(
-    (state) => state.var.editor
-  );
-  const { input } = useSelector((state) => state.response);
+  // Available themes object
+  const themes = {
+    oneDark,
+    boysAndGirls,
+    ayuLight,
+    barf,
+    cobalt,
+    clouds,
+  };
+  
+  // Get editor state from Redux store
+  const { theme, language, codeSnippet, isLineWrapping,version} =
+    useSelector((state) => state.var.editor);
+  const {input} = useSelector((state) => state.response);
 
   const handleThemeChange = (e) => {
     dispatch(setEditorTheme(e.target.value));
@@ -42,9 +47,35 @@ export default function Menubar({
     setLanguageDropdownVisible(false);
   };
 
+  const handleLanguageChange2 = (e) => {
+    setLanguageDropdownVisible2(false); // Hide the dropdown
+    const selectedLanguage = e.target.value;
+    console.log(fileName,selectedLanguage);
+    if (fileName && selectedLanguage) {
+      dispatch(setEditorLanguage(e.target.value)); // Update Redux store
+      onCreateEditor({ fileName, language: selectedLanguage }); // Create editor
+      console.log(fileName,selectedLanguage);
+      // dispatch(setEditorLanguage(selectedLanguage)); // Update Redux store
+      
+      setFileName(null); // Reset file name state
+    }
+  };
+
   const handleLineWrapping = () => {
     dispatch(toggleLineWrapping());
   };
+
+
+ const handleNewEditor = () => {
+    const name = prompt("Enter file name:");
+    if (name) {
+
+      setFileName(name);
+      setLanguageDropdownVisible2(true); 
+     // Show the dropdown
+    }
+  };
+
 
   const runCode = async () => {
     setLoading(true);
@@ -109,6 +140,7 @@ export default function Menubar({
           </select>
         </div>
 
+        
         {/* Theme Dropdown */}
         
       </div>
@@ -188,7 +220,37 @@ export default function Menubar({
             ))}
           </select>
         </div>
-        {/* Line Wrapping Toggle */}
+      </div>
+
+
+    {/*Add a button for adding new code editors */}
+    <button
+  onClick={handleNewEditor}
+  className="p-2 bg-blue-600 text-white rounded-full hover:bg-blue-500 flex items-center justify-center shadow-md"
+>
+  <FaCode className="text-lg" />
+  <span className="hidden sm:inline ml-2">New Editor</span>
+</button>
+
+  {/* Language Dropdown */}
+  {isLanguageDropdownVisible2 && (
+    <div className="absolute bg-gray-800 text-white p-4 rounded shadow-md">
+      <label className="block mb-2">Select Language:</label>
+      <select
+        className="px-2 py-1 bg-gray-700 rounded"
+        onChange={handleLanguageChange2}
+      >
+        {LANGUAGE_DATA.map((lang, index) => (
+          <option key={index} value={lang.language}>
+            {lang.language.toUpperCase()} (v{lang.version})
+          </option>
+        ))}
+      </select>
+    </div>
+  )}
+      {/* Right Section */}
+      <div className="flex items-center space-x-2">
+        {/* Line wrapping toggle button */}
         <button
           className="px-4 py-1 bg-gray-700 text-white rounded-md hover:bg-cyan-500 transition-all shadow-md flex items-center space-x-2"
           onClick={handleLineWrapping}
