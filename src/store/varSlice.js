@@ -5,12 +5,13 @@ const initialState = {
   editor: {
     theme: 'oneDark',
     themec: '#282C34',
-    language: 'c',
-    version: '10.2.0',
-    codeSnippet: `#include <stdio.h>\n\nint main() {\n\tprintf("Welcome to boardcode The code editor!");\n\treturn 0;\n}\n`,
-    info: 'C does not have built-in Tree Set or Tree Map data structures, but you can use structures to build it.',
-    icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/c/c-original.svg',
-    isLineWrapping: false,
+    
+      language: 'javascript',
+      version: '18.15.0',
+      codeSnippet: `function welcome() {\n\tconsole.log("Welcome to boardcode The code editor!");\n}\n\nwelcome();\n`,
+      info: 'JavaScript does not have built-in Queue and Priority Queue data structures so you may use datastructures-js/queue and datastructures-js/priority-queue instead.',
+      icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg',
+      isLineWrapping: false,
   }
 };
 

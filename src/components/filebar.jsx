@@ -19,7 +19,8 @@ import {
 import { useDispatch } from "react-redux";
 import { LANGUAGE_DATA } from "../config/constants";
 import { setEditorLanguage } from "../store/varSlice";
-
+import { Icon } from "@mui/material";
+import { ICON } from "../config/icon";
 export default function Filebar({
   fileSectionWidth,
   setFileSectionWidth,
@@ -38,6 +39,7 @@ export default function Filebar({
   const [notificationModal, setNotificationModal] = useState(null);
   const [tabToDelete, setTabToDelete] = useState(null);
   const dispatch = useDispatch();
+
 
   useEffect(() => {
     const fetchTabs = async () => {
@@ -240,6 +242,13 @@ export default function Filebar({
                   </div>
                 ) : (
                   <>
+                  <span>
+                  <img
+        src={ICON[tab.language]}
+        alt={`${tab.language} Icon`}
+        className="inline-block w-6 h-6 mr-2"
+      />
+                  </span>
                     <span className="cursor-pointer flex-grow" onClick={() => handleTabClick(tab)}>
                       {tab.name}
                     </span>
