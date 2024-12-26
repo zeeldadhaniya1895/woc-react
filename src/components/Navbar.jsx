@@ -27,7 +27,7 @@ function Navbar({ onLogout, guest }) {
 
   return (
     <AppBar
-      position="sticky"
+      position="static"
       sx={{
         background: 'linear-gradient(135deg, #6A0DAD, #A94DB0, #E4B3E6)',
         color: 'white',
