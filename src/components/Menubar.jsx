@@ -7,15 +7,13 @@ import { executeCode } from "../API/api";
 import {setEditorTheme,setEditorLanguage,toggleLineWrapping,} from "../store/varSlice";
 import { FaBars, FaTerminal, FaPlay, FaCode, FaPalette, FaLanguage } from "react-icons/fa";
 import { setAll, setOutput } from "../store/apiResponseSlice";
-import { addNewTab } from '../appwrite/database.service';
-import authService from '../appwrite/auth.service';
+
 export default function Menubar({ fileSectionVisible, setFileSectionVisible, terminalVisible, setTerminalVisible, setTerminalHeight, guest, onCreateEditor }) {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [isThemeDropdownVisible, setThemeDropdownVisible] = useState(false);
   const [isLanguageDropdownVisible, setLanguageDropdownVisible] = useState(false);
-  const [isLanguageDropdownVisible2, setLanguageDropdownVisible2] = useState(false);
-  const [fileName, setFileName] = useState(null);
+ 
 
   const themes = {oneDark,boysAndGirls,ayuLight,barf,cobalt,clouds,};
   const { theme, language, codeSnippet, isLineWrapping, version } =useSelector((state) => state.var.editor);
@@ -25,48 +23,11 @@ export default function Menubar({ fileSectionVisible, setFileSectionVisible, ter
 
   const handleLanguageChange = (e) => {dispatch(setEditorLanguage(e.target.value));setLanguageDropdownVisible(false);};
 
-  const handleLanguageChange2 = async (e) => {
-    try {
-      setLanguageDropdownVisible2(false);
-      const selectedLanguage = e.target.value;
-
-      if (fileName && selectedLanguage) {
-        const user = await authService.getCurrentUser();
-        if (!user) {
-          throw new Error('No user logged in');
-        }
-
-        const result = await addNewTab(user.email, fileName, selectedLanguage);
-
-        if (result.success) {
-          dispatch(setEditorLanguage(selectedLanguage));
-          console.log(result.message);
-        } else {
-          console.error(result.message);
-        }
-
-        setFileName(null);
-      }
-    } catch (error) {
-      console.error("Create Editor error:", error);
-    }
-  };
+ 
 
   const handleLineWrapping = () => {
     dispatch(toggleLineWrapping());
   };
-
-
-  const handleNewEditor = () => {
-    const name = prompt("Enter file name:");
-    if (name) {
-
-      setFileName(name);
-      setLanguageDropdownVisible2(true);
-      // Show the dropdown
-    }
-  };
-
 
   const runCode = async () => {
     setLoading(true);
@@ -130,21 +91,7 @@ export default function Menubar({ fileSectionVisible, setFileSectionVisible, ter
           </select>
         </div>
 
-        {isLanguageDropdownVisible2 && (
-          <div className="absolute bg-gray-800 text-white p-4 rounded shadow-md">
-            <label className="block mb-2">Select Language:</label>
-            <select
-              className="px-2 py-1 bg-gray-700 rounded"
-              onChange={handleLanguageChange2}
-            >
-              {LANGUAGE_DATA.map((lang, index) => (
-                <option key={index} value={lang.language}>
-                  {lang.language.toUpperCase()} (v{lang.version})
-                </option>
-              ))}
-            </select>
-          </div>
-        )}
+        
         {/* Theme Dropdown */}
 
       </div>
@@ -198,7 +145,7 @@ export default function Menubar({ fileSectionVisible, setFileSectionVisible, ter
         )}
       </button>
 
-      {
+      {/* {
           guest ? null : (
             <button
               onClick={handleNewEditor}
@@ -208,7 +155,7 @@ export default function Menubar({ fileSectionVisible, setFileSectionVisible, ter
               <span className="hidden font-medium sm:inline ml-2">New Editor</span>
             </button>)
 
-        }
+        } */}
         </div>
 
 
