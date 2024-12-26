@@ -80,41 +80,6 @@ export default function Filebar({ fileSectionWidth, setFileSectionWidth }) {
     }
     setEditingTab(null);
   };
-  // if (loading) {
-  //   return <div className="bg-gray-900 border-r border-gray-700 text-gray-400 flex flex-col justify-start items-center p-4">Loading...</div>; // Display loading state
-  // }
-
-//   return (
-//     <Rnd
-//       size={{ width: fileSectionWidth, height: "100%" }}
-//       minWidth={150}
-//       maxWidth={400}
-//       enableResizing={{ right: true }}
-//       disableDragging={true}
-//       onResizeStop={(e, direction, ref) => setFileSectionWidth(ref.offsetWidth)}
-//       className="bg-gray-900 border-r border-gray-700 flex flex-col justify-start items-center p-4"
-//     >
-//       <h3 className="text-gray-400">Files</h3>
-//       <hr className="w-full border-gray-700 mb-4" />
-//       {loading ? (
-//         <p className="text-gray-400">Loading...</p>
-//       ) : error ? (
-//         <p className="text-red-400">{error}</p>
-//       ) : (
-//         <ol className="w-full space-y-2">
-//           {tabs.map((tab) => (
-//             <li 
-//               key={tab.id} 
-//               className="text-gray-300 hover:bg-gray-800 p-2 rounded cursor-pointer"
-//             >
-//               {tab.name}
-//             </li>
-//           ))}
-//         </ol>
-//          )}
-//     </Rnd>
-//   );
-// }
 
   return (
     <Rnd

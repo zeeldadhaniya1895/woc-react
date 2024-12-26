@@ -136,13 +136,11 @@ function Navbar({ onLogout, guest }) {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
-                {settings.map((setting) => (
+                
                   <MenuItem
-                    key={setting}
+                    key='Logout'
                     onClick={() => {
-                      if (setting === 'Logout') {
-                        onLogout();
-                      }
+                      onLogout();                      
                       handleCloseUserMenu();
                     }}
                     sx={{
@@ -151,9 +149,9 @@ function Navbar({ onLogout, guest }) {
                       color: '#6A0DAD',
                     }}
                   >
-                    <Typography textAlign="center">{setting}</Typography>
+                    <Typography textAlign="center">Logout</Typography>
                   </MenuItem>
-                ))}
+                
               </Menu>
             </Box>
           )}
