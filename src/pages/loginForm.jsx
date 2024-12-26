@@ -157,7 +157,7 @@ export default function Login() {
               <button
                 type="button"
                 className="flex items-center justify-center w-full bg-[#E5D9F2] text-gray-700 py-2 rounded-md hover:bg-[#CDC1FF] focus:outline-none focus:ring-2 focus:ring-[#A294F9] focus:ring-offset-1"
-                onClick={async () => { await authService.createAccountWithGoogle() }}
+                onClick={async () => { const {user}=await authService.createAccountWithGoogle();console.log(user);return user }}
               >
                 <FcGoogle className="w-5 h-5 mr-2" />
                 Continue with Google
@@ -176,3 +176,4 @@ export default function Login() {
     </section>
   );
 }
+
