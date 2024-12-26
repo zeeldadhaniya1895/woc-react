@@ -11,7 +11,10 @@ import {
 } from "../store/varSlice";
 import { FaBars, FaTerminal, FaPlay, FaCode, FaPalette, FaLanguage } from "react-icons/fa";
 import { setAll, setOutput } from "../store/apiResponseSlice";
-
+// import  {onCreateEditor} from "../appwrite/service_functionality";
+// import  {onCreateEditor} from "../appwrite/auth.service";
+import { addNewTab } from '../appwrite/database.service';
+import authService from '../appwrite/auth.service';
 // Main Menubar component
 export default function Menubar({ fileSectionVisible, setFileSectionVisible, terminalVisible, setTerminalVisible, setTerminalHeight,guest,onCreateEditor }) {
   // Initialize Redux dispatch
@@ -47,19 +50,31 @@ export default function Menubar({ fileSectionVisible, setFileSectionVisible, ter
     setLanguageDropdownVisible(false);
   };
 
-  const handleLanguageChange2 = (e) => {
-    setLanguageDropdownVisible2(false); // Hide the dropdown
-    const selectedLanguage = e.target.value;
-    console.log(fileName,selectedLanguage);
-    if (fileName && selectedLanguage) {
-      dispatch(setEditorLanguage(e.target.value)); // Update Redux store
-      onCreateEditor({ fileName, language: selectedLanguage }); // Create editor
-      console.log(fileName,selectedLanguage);
-      // dispatch(setEditorLanguage(selectedLanguage)); // Update Redux store
+  const handleLanguageChange2 = async (e) => {
+    try {
+      setLanguageDropdownVisible2(false);
+      const selectedLanguage = e.target.value;
       
-      setFileName(null); // Reset file name state
-    }
-  };
+      if (fileName && selectedLanguage) {
+        const user = await authService.getCurrentUser();
+        if (!user) {
+          throw new Error('No user logged in');
+        }
+  
+        const result = await addNewTab(user.email, fileName, selectedLanguage);
+        
+        if (result.success) {
+          dispatch(setEditorLanguage(selectedLanguage));
+          console.log(result.message);
+        } else {
+          console.error(result.message);
+        }
+        
+        setFileName(null);
+      }
+    } catch (error) {
+    console.error("Create Editor error:", error);
+  }};
 
   const handleLineWrapping = () => {
     dispatch(toggleLineWrapping());

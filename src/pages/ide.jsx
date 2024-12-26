@@ -11,7 +11,13 @@ const Ide = ({ onLogout }) => {
   const [fileSectionWidth, setFileSectionWidth] = useState(250);
   const [terminalVisible, setTerminalVisible] = useState(false);
   const [terminalHeight, setTerminalHeight] = useState(250);
+  const [activeTab, setActiveTab] = useState(null);
+  const [activeCode, setActiveCode] = useState("");
 
+  const handleTabSelect = (tab, code) => {
+    setActiveTab(tab);
+    setActiveCode(code);
+  };
   return (
     <div
       className="h-screen flex flex-col overflow-hidden border-2 border-b-0 border-purple-800 shadow-lg border-r-purple-300"
@@ -26,7 +32,7 @@ const Ide = ({ onLogout }) => {
       
       {/*Menubar */}
       <Menubar fileSectionVisible={fileSectionVisible} setFileSectionVisible={setFileSectionVisible} terminalVisible={terminalVisible} setTerminalVisible={setTerminalVisible} setTerminalHeight={setTerminalHeight} guest={false}
-      // onCreateEditor={handleCreateEditor}
+      // onCreateEditor={onCreateEditor}
        />
 
       {/* Main Content */}
@@ -37,6 +43,7 @@ const Ide = ({ onLogout }) => {
             fileSectionWidth={fileSectionWidth}
             setFileSectionWidth={setFileSectionWidth}
             setFileSectionVisible={setFileSectionVisible}
+            onTabSelect={handleTabSelect}
             style={{
               zIndex:10000,
             }}
@@ -47,6 +54,8 @@ const Ide = ({ onLogout }) => {
         <CodeEditor
           fileSectionWidth={fileSectionWidth}
           fileSectionVisible={fileSectionVisible}
+          activeTab={activeTab}
+          activeCode={activeCode}
         />
       </div>
 
