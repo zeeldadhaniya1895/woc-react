@@ -98,7 +98,7 @@ const ChatWithAI = () => {
         <Draggable bounds="body">
           <div
             ref={chatBoxRef}
-            className="fixed bottom-5 right-5 bg-white shadow-lg rounded-lg w-[30vw] h-[55vh] min-w-[15vw] min-h-[30vh] max-w-[90vw] max-h-[90vh] overflow-hidden resize flex flex-col"
+            className="fixed bottom-5 right-5 bg-white shadow-lg rounded-lg w-[80vw] h-[70vh] max-w-full max-h-[80vh] overflow-hidden resize flex flex-col md:w-[40vw] md:h-[55vh]"
           >
             {/* Header */}
             <div className="bg-gradient-to-r from-purple-700 to-purple-500 text-white p-3 rounded-t-lg flex items-center justify-between">
@@ -106,7 +106,7 @@ const ChatWithAI = () => {
                 <div className="bg-white text-purple-700 w-8 h-8 rounded-full flex items-center justify-center font-bold">
                   AI
                 </div>
-                <h3 className="text-lg">AI Assistant</h3>
+                <h3 className="text-lg hidden md:block">AI Assistant</h3>
               </div>
               <button
                 onClick={handleToggleChat}
