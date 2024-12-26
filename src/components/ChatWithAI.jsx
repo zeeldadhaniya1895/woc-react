@@ -9,6 +9,7 @@ const ChatWithAI = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const chatContainerRef = useRef(null);
   const chatBoxRef = useRef(null);
 
@@ -27,17 +28,24 @@ const ChatWithAI = () => {
 
     setMessages((prev) => [...prev, userMessage]);
     setInputMessage("");
+    setIsLoading(true);
 
     try {
       const response = await axios.post(
-        "https://api.example.com/chat",
-        { message: inputMessage },
+        "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyDwVqDCij1YkKrKkJ2xLB5TN2inxMYTCs4",
+        {
+          contents: [
+            {
+              parts: [{ text: inputMessage }],
+            },
+          ],
+        },
         { headers: { "Content-Type": "application/json" } }
       );
 
       const aiMessage = {
         id: uuidv4(),
-        text: `**AI**: ${response.data.reply}`,
+        text: `**AI**: ${response.data.candidates[0].content.parts[0].text}`,
         sender: "ai",
       };
 
@@ -52,6 +60,8 @@ const ChatWithAI = () => {
       };
 
       setMessages((prev) => [...prev, errorMessage]);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -138,6 +148,17 @@ const ChatWithAI = () => {
                     <ReactMarkdown>{msg.text}</ReactMarkdown>
                   </motion.div>
                 ))}
+                {isLoading && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.3 }}
+                    className="max-w-[80%] p-2 rounded-lg bg-gray-300 text-black self-start"
+                  >
+                    **AI**: Typing...
+                  </motion.div>
+                )}
               </AnimatePresence>
             </div>
 
@@ -150,12 +171,14 @@ const ChatWithAI = () => {
                 placeholder="Type your message..."
                 className="flex-1 p-2 rounded-md border border-gray-300 focus:ring-2 focus:ring-purple-500 outline-none resize-none"
                 rows={1}
+                disabled={isLoading}
               />
               <button
                 onClick={handleSendMessage}
                 className="ml-3 px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 focus:outline-none"
+                disabled={isLoading}
               >
-                Send
+                {isLoading ? "Sending..." : "Send"}
               </button>
             </div>
           </div>
@@ -166,3 +189,25 @@ const ChatWithAI = () => {
 };
 
 export default ChatWithAI;
+
+
+
+
+
+
+// const response = await axios.post(
+//     "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyDwVqDCij1YkKrKkJ2xLB5TN2inxMYTCs4",
+//     {
+//         contents: [{
+//           parts:[{text: inputMessage}]
+//           }]
+//          },
+//     { headers: { "Content-Type": "application/json" } }
+//   );
+
+  
+//   const aiMessage = {
+//     id: uuidv4(),
+//     text: `**AI**: ${response.data.candidates[0].content.parts[0].text}`,
+//     sender: "ai",
+//   };
