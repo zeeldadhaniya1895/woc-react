@@ -1,4 +1,4 @@
-import { initializeApp } from "firebase/app";
+// import { initializeApp } from "firebase/app";
 import { createUserWithDefaultTab } from './database.service';
 import {
     getAuth,
@@ -14,21 +14,22 @@ import {
     inMemoryPersistence
 } from "firebase/auth";
 import { updateProfile } from "firebase/auth";
+import {auth} from './database.service';
 class AuthService {
     constructor() {
-        const firebaseConfig = {
-            apiKey: "AIzaSyDYWLbR1Ud0qwj-6F06rDosta5x_TewD4A",
-            authDomain: "boardcode-b36dd.firebaseapp.com",
-            projectId: "boardcode-b36dd",
-            storageBucket: "boardcode-b36dd.firebasestorage.app",
-            messagingSenderId: "975798164904",
-            appId: "1:975798164904:web:30690a94c69984ece3d19d",
-            measurementId: "G-QLZ1NVXFGH",
-        };
+        // const firebaseConfig = {
+        //     apiKey: "AIzaSyDYWLbR1Ud0qwj-6F06rDosta5x_TewD4A",
+        //     authDomain: "boardcode-b36dd.firebaseapp.com",
+        //     projectId: "boardcode-b36dd",
+        //     storageBucket: "boardcode-b36dd.firebasestorage.app",
+        //     messagingSenderId: "975798164904",
+        //     appId: "1:975798164904:web:30690a94c69984ece3d19d",
+        //     measurementId: "G-QLZ1NVXFGH",
+        // };
 
         // Initialize Firebase
-        this.app = initializeApp(firebaseConfig, "boardcode-b36dd");
-        this.auth = getAuth(this.app);
+        // this.app = initializeApp(firebaseConfig, "boardcode-b36dd");
+        this.auth = auth;
 
         // Set default session persistence to 'local'
         this.setPersistence("local");

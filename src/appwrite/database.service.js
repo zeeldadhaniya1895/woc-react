@@ -1,19 +1,33 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore, doc, setDoc, getDoc, updateDoc } from "firebase/firestore";
 import { v4 as uuidv4 } from 'uuid';
-
-const firebaseConfigDb = {
-  apiKey: "AIzaSyBHNcwFWQ8xfOxitQgCnp-Hdgd98bADY_Y",
-  authDomain: "codeeditor-5e6a3.firebaseapp.com",
-  projectId: "codeeditor-5e6a3",
-  storageBucket: "codeeditor-5e6a3.firebasestorage.app",
-  messagingSenderId: "436317022784",
-  appId: "1:436317022784:web:ccd9b20bbfb30a35854da5",
-  measurementId: "G-Y56VB5ZRPR"
+import {
+    getAuth
+} from "firebase/auth";
+// const firebaseConfigDb = {
+//   apiKey: "AIzaSyBHNcwFWQ8xfOxitQgCnp-Hdgd98bADY_Y",
+//   authDomain: "codeeditor-5e6a3.firebaseapp.com",
+//   projectId: "codeeditor-5e6a3",
+//   storageBucket: "codeeditor-5e6a3.firebasestorage.app",
+//   messagingSenderId: "436317022784",
+//   appId: "1:436317022784:web:ccd9b20bbfb30a35854da5",
+//   measurementId: "G-Y56VB5ZRPR"
+// };
+const firebaseConfig = {
+    apiKey: "AIzaSyDYWLbR1Ud0qwj-6F06rDosta5x_TewD4A",
+    authDomain: "boardcode-b36dd.firebaseapp.com",
+    projectId: "boardcode-b36dd",
+    storageBucket: "boardcode-b36dd.firebasestorage.app",
+    messagingSenderId: "975798164904",
+    appId: "1:975798164904:web:30690a94c69984ece3d19d",
+    measurementId: "G-QLZ1NVXFGH",
 };
 
-const dbapp = initializeApp(firebaseConfigDb, "codeeditor-5e6a3");
-const db = getFirestore(dbapp);
+// const dbapp = initializeApp(firebaseConfigDb);
+const app = initializeApp(firebaseConfig);
+
+const db = getFirestore(app);
+export const auth = getAuth(app);
 
 export const createUserWithDefaultTab = async (email) => {
   const userRef = doc(db, "users", email);
