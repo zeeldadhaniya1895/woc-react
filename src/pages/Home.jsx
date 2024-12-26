@@ -87,7 +87,7 @@ export default function Home() {
 
       {/* Hero Section */}
       <motion.section
-        className="relative bg-gradient-to-br from-white to-purple-100 py-20 px-6 text-center border border-purple-500 rounded-lg shadow-lg"
+        className="relative bg-gradient-to-br from-white to-purple-100 py-20 px-6 pb-0 text-center border border-purple-500 rounded-lg shadow-lg"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1 }}
@@ -128,9 +128,9 @@ export default function Home() {
           transition={{ duration: 1, delay: 0.5 }}
         >
           <img
-            src="/assets/hero-mockup.png"
+            src="./ide.png"
             alt="IDE Mockup"
-            className="max-w-lg h-auto rounded-2xl shadow-2xl border border-purple-500"
+            className="w-[86vw] h-auto rounded-2xl rounded-b-none shadow-2xl border border-purple-500"
           />
         </motion.div>
       </motion.section>
