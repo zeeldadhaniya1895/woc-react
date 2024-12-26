@@ -52,7 +52,9 @@ function App() {
                     path="/ide"
                     element={
                         <ProtectedRoute>
-                            <Ide onLogout={handleLogout} />
+                            <Ide 
+                            onLogout={handleLogout}
+                             />
                         </ProtectedRoute>
                     }
                 />

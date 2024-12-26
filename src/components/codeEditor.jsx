@@ -66,7 +66,8 @@ function myLinter(view) {
 }
 
 // CodeEditor component
-export default function CodeEditor({ fileSectionWidth, fileSectionVisible }) {
+export default function CodeEditor({ fileSectionWidth, fileSectionVisible,activeTab, 
+  activeCode  }) {
   const dispatch = useDispatch();
   const editorContainerRef = useRef(null);
   const editorRef = useRef(null);

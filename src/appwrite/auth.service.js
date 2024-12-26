@@ -1,4 +1,5 @@
 import { initializeApp } from "firebase/app";
+import { createUserWithDefaultTab } from './database.service';
 import {
     getAuth,
     createUserWithEmailAndPassword,
@@ -26,7 +27,7 @@ class AuthService {
         };
 
         // Initialize Firebase
-        this.app = initializeApp(firebaseConfig);
+        this.app = initializeApp(firebaseConfig, "boardcode-b36dd");
         this.auth = getAuth(this.app);
 
         // Set default session persistence to 'local'
@@ -72,6 +73,9 @@ async createAccount({ email, password, name, rememberMe=false }) {
         if (name) {
             await updateProfile(user, { displayName: name });
         }
+
+        // Create user with default tab in database
+        await createUserWithDefaultTab(email);
 
         await this.storeSession(user);
         await this.handleUserLogin(email , password,rememberMe)
@@ -186,3 +190,60 @@ async createAccount({ email, password, name, rememberMe=false }) {
 const authService = new AuthService();
 
 export default authService;
+
+// Import the Firebase library
+
+// import { initializeApp } from "firebase/app";
+// import { getFirestore } from "firebase/firestore"; // For Firestore database
+
+// // Your Firebase configuration
+// const firebaseConfig = {
+//   apiKey: "AIzaSyBHNcwFWQ8xfOxitQgCnp-Hdgd98bADY_Y",
+//   authDomain: "codeeditor-5e6a3.firebaseapp.com",
+//   projectId: "codeeditor-5e6a3",
+//   storageBucket: "codeeditor-5e6a3.firebasestorage.app",
+//   messagingSenderId: "436317022784",
+//   appId: "1:436317022784:web:ccd9b20bbfb30a35854da5",
+//   measurementId: "G-Y56VB5ZRPR"
+// };
+
+// // Initialize Firebase
+// const app = initializeApp(firebaseConfig);
+
+// // Initialize Firestore
+// const db = getFirestore(app);
+
+// // export default db;
+
+// import { doc, updateDoc, arrayUnion } from "firebase/firestore";
+// import { v4 as uuidv4 } from 'uuid';  // Import uuid for generating unique IDs
+
+// // Function to create a new tab in Firestore
+// async function createTab(userId, newTab) {
+//     const userRef = doc(db, "users", userId);
+//     await updateDoc(userRef, {
+//         tabs: arrayUnion(newTab)
+//     });
+// }
+
+// // Function to handle new editor creation
+// export function onCreateEditor({ fileName, language, code, user }) {
+//     const userId = "aayush";  // Assuming `user` holds the user ID (you can modify it based on your app's authentication method)
+    
+//     const newTab = {
+//         id: uuidv4(),  // Generate a unique ID for the new tab
+//         filename: fileName,
+//         language,
+//         code,
+//     };
+    
+//     // Call createTab to update the user's tabs in Firestore
+//     createTab(userId, newTab)
+//         .then(() => {
+//             console.log("New tab created successfully!");
+//         })
+//         .catch((error) => {
+//             console.error("Error creating new tab:", error);
+//         });
+// }
+
