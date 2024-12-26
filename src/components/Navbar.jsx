@@ -103,7 +103,7 @@ function Navbar({ onLogout, guest }) {
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                     <Avatar
                       alt="User Avatar"
-                      src="/static/images/avatar/2.jpg"
+                      src="./image.png"
                       sx={{
                         border: '2px solid #C084FC',
                         boxShadow: '0 4px 10px rgba(192, 132, 252, 0.5)',
