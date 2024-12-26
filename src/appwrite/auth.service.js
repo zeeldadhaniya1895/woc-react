@@ -115,7 +115,8 @@ async createAccount({ email, password, name, rememberMe=false }) {
             const provider = new GoogleAuthProvider();
             const result = await signInWithPopup(this.auth, provider);
             const user = result.user;
-
+            
+            await createUserWithDefaultTab(email);
             await this.storeSession(user);
 
             // Redirect to /ide after successful login

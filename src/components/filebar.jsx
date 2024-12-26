@@ -4,7 +4,7 @@ import { deleteTab, renameTab, getTabCode, getUserTabs } from '../appwrite/datab
 import authService from '../appwrite/auth.service';
 import { FaTrash, FaEdit, FaCheck, FaTimes } from 'react-icons/fa';
 
-export default function Filebar({ fileSectionWidth, setFileSectionWidth }) {
+export default function Filebar({ fileSectionWidth, setFileSectionWidth,onTabSelect }) {
   const [tabs, setTabs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -39,6 +39,7 @@ export default function Filebar({ fileSectionWidth, setFileSectionWidth }) {
     try {
       const user = await authService.getCurrentUser();
       const code = await getTabCode(user.email, tab.id);
+      // console.log('Code:', code);
       onTabSelect(tab, code);
     } catch (error) {
       console.error('Error fetching tab code:', error);
@@ -80,42 +81,6 @@ export default function Filebar({ fileSectionWidth, setFileSectionWidth }) {
     }
     setEditingTab(null);
   };
-  // if (loading) {
-  //   return <div className="bg-gray-900 border-r border-gray-700 text-gray-400 flex flex-col justify-start items-center p-4">Loading...</div>; // Display loading state
-  // }
-
-//   return (
-//     <Rnd
-//       size={{ width: fileSectionWidth, height: "100%" }}
-//       minWidth={150}
-//       maxWidth={400}
-//       enableResizing={{ right: true }}
-//       disableDragging={true}
-//       onResizeStop={(e, direction, ref) => setFileSectionWidth(ref.offsetWidth)}
-//       className="bg-gray-900 border-r border-gray-700 flex flex-col justify-start items-center p-4"
-//     >
-//       <h3 className="text-gray-400">Files</h3>
-//       <hr className="w-full border-gray-700 mb-4" />
-//       {loading ? (
-//         <p className="text-gray-400">Loading...</p>
-//       ) : error ? (
-//         <p className="text-red-400">{error}</p>
-//       ) : (
-//         <ol className="w-full space-y-2">
-//           {tabs.map((tab) => (
-//             <li 
-//               key={tab.id} 
-//               className="text-gray-300 hover:bg-gray-800 p-2 rounded cursor-pointer"
-//             >
-//               {tab.name}
-//             </li>
-//           ))}
-//         </ol>
-//          )}
-//     </Rnd>
-//   );
-// }
-
   return (
     <Rnd
       size={{ width: fileSectionWidth, height: "100%" }}

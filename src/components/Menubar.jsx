@@ -239,14 +239,14 @@ export default function Menubar({ fileSectionVisible, setFileSectionVisible, ter
 
 
     {/*Add a button for adding new code editors */}
-    <button
+    {!guest && ( <button
   onClick={handleNewEditor}
   className="p-2 bg-blue-600 text-white rounded-full hover:bg-blue-500 flex items-center justify-center shadow-md"
 >
   <FaCode className="text-lg" />
   <span className="hidden sm:inline ml-2">New Editor</span>
 </button>
-
+    )}
   {/* Language Dropdown */}
   {isLanguageDropdownVisible2 && (
     <div className="absolute bg-gray-800 text-white p-4 rounded shadow-md">
