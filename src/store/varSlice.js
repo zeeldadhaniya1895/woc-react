@@ -11,6 +11,8 @@ const initialState = {
     info: 'C does not have built-in Tree Set or Tree Map data structures, but you can use structures to build it.',
     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/c/c-original.svg',
     isLineWrapping: false,
+    activeTab: null,
+    activeCode: '',
   }
 };
 
@@ -45,8 +47,27 @@ const varSlice = createSlice({
     toggleLineWrapping: (state) => {
       state.editor.isLineWrapping = !state.editor.isLineWrapping;
     },
+    setActiveTab: (state, action) => {
+      state.editor.activeTab = action.payload;
+      if (action.payload?.language) {
+        state.editor.language = action.payload.language;
+        const langData = LANGUAGE_DATA.find(
+          (lang) => lang.name === action.payload.language
+        );
+        if (langData) {
+          state.editor.info = langData.info;
+          state.editor.icon = langData.icon;
+          state.editor.version = langData.version;
+        }
+      }
+    },
+    setActiveCode: (state, action) => {
+      state.editor.activeCode = action.payload;
+      state.editor.codeSnippet = action.payload;
+    }
   },
 });
 
-export const { setEditorTheme, setEditorCode, setEditorLanguage, toggleLineWrapping,setThemecolor } = varSlice.actions;
+export const { setEditorTheme, setEditorCode, setEditorLanguage, toggleLineWrapping,setThemecolor, setActiveTab,
+  setActiveCode } = varSlice.actions;
 export default varSlice.reducer;

@@ -21,7 +21,10 @@ import { autocompletion } from "@codemirror/autocomplete";
 import { lintGutter, linter } from "@codemirror/lint";
 import { searchKeymap } from "@codemirror/search";
 import { closeBrackets, closeBracketsKeymap } from "@codemirror/autocomplete";
-
+// import { oneDark } from '@codemirror/theme-one-dark';
+// import { githubLight } from '@codemirror/theme-github';  // Changed import
+import authService from "../appwrite/auth.service";
+import { updateTabCode } from "../appwrite/database.service";
 // Formate code
 import prettier from "prettier/standalone";
 import prettierPluginJava from "prettier-plugin-java";
@@ -80,8 +83,8 @@ export default function CodeEditor({
   const dispatch = useDispatch();
   const editorContainerRef = useRef(null);
   const editorRef = useRef(null);
-
-  const { theme, themec, language, codeSnippet, isLineWrapping, icon, info } =
+  const autoSaveTimerRef = useRef(null);
+  const { theme, themec, language, codeSnippet, isLineWrapping, icon, info} =
     useSelector((state) => state.var.editor);
 
   const themes = {
@@ -101,6 +104,39 @@ export default function CodeEditor({
     c:"c",
   };
 
+  // Handle code updates when tab changes
+  useEffect(() => {
+    console.log("CodeEditor received activeTab:", activeTab); // Debug log
+  // console.log("CodeEditor received activeCode:", activeCode); // Debug log
+  
+    if (activeTab && activeCode && editorRef.current) {
+      const transaction = editorRef.current.state.update({
+        changes: {
+          from: 0,
+          to: editorRef.current.state.doc.length,
+          insert: activeCode
+        }
+      });
+      editorRef.current.dispatch(transaction);
+    }
+  }, [activeTab, activeCode]);
+
+    // Auto-save function
+    const saveCode = async (code) => {
+      try {
+        const user = await authService.getCurrentUser();
+        if (user && activeTab) {
+          await updateTabCode(user.email, activeTab.id, code);
+          // dispatch(updateTab({
+          //   id: activeTab.id,
+          //   updates: { code }
+          // }));
+        }
+      } catch (error) {
+        console.error('Error saving code:', error);
+      }
+    };
+
   useEffect(() => {
     const themecc = themess.filter((themes) => themes.name === theme)[0].color;
     dispatch(setThemecolor(themecc));
@@ -118,7 +154,7 @@ export default function CodeEditor({
     if (editorContainerRef.current && !editorRef.current) {
       editorRef.current = new EditorView({
         state: EditorState.create({
-          doc: codeSnippet,
+          doc: activeCode|| codeSnippet,
           extensions: [
             basicSetup,
             cpp(),
@@ -145,8 +181,20 @@ export default function CodeEditor({
               if (update.docChanged) {
                 const newCode = update.state.doc.toString();
                 dispatch(setEditorCode(newCode));
+                 // Debounce auto-save
+                 if (autoSaveTimerRef.current) {
+                  clearTimeout(autoSaveTimerRef.current);
+                }
+                
+                autoSaveTimerRef.current = setTimeout(() => {
+                  saveCode(newCode);
+                }, 2000);
               }
             }),
+            // theme === "vs-dark" ? oneDark :  oneDark,
+            // EditorView.lineWrapping.of(isLineWrapping),
+            // activeTab?.language ? langs[activeTab.language]() : langs.javascript()
+         
           ],
         }),
         parent: editorContainerRef.current,
@@ -154,20 +202,35 @@ export default function CodeEditor({
     }
 
     return () => {
+      if (autoSaveTimerRef.current) {
+        clearTimeout(autoSaveTimerRef.current);
+      }
       if (editorRef.current) {
         editorRef.current.destroy();
         editorRef.current = null;
       }
     };
-  }, [theme, themec, isLineWrapping, dispatch, language]);
+  }, [theme, themec, isLineWrapping, dispatch, language,activeTab]);
 
+  // const handleDownload = () => {
+  //   const code = editorRef.current.state.doc.toString();
+  //   const fileExtension = fileExtensions[language] || "txt";
+  //   const fileName = `code.${fileExtension}`;
+  //   downloadFile(code, fileName);
+  // };
   const handleDownload = () => {
-    const code = editorRef.current.state.doc.toString();
-    const fileExtension = fileExtensions[language] || "txt";
-    const fileName = `code.${fileExtension}`;
-    downloadFile(code, fileName);
+    if (editorRef.current) {
+      const code = editorRef.current.state.doc.toString();
+      const fileName = activeTab?.name || `code.${language}`;
+      const blob = new Blob([code], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = fileName;
+      link.click();
+      URL.revokeObjectURL(url);
+    }
   };
-
   return (
     <div
   className={`flex flex-1 flex-col overflow-hidden relative ${
@@ -189,6 +252,7 @@ export default function CodeEditor({
       />
       <span style={{ color: "GrayText" }}>
         {language.toUpperCase()}: {info}
+        {/* {activeTab.language.toUpperCase()}: {info} */}
       </span>
     </div>
 
