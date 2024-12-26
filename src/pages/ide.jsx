@@ -4,6 +4,7 @@ import Filerbar from "../components/filebar";
 import CodeEditor from "../components/codeEditor";
 import Terminal from "../components/terminal";
 import Menubar from "../components/Menubar";
+import ChatWithAI from "../components/ChatWithAI";
 
 const Ide = ({ onLogout }) => {
   const [fileSectionVisible, setFileSectionVisible] = useState(true);
@@ -57,6 +58,8 @@ const Ide = ({ onLogout }) => {
           activeCode={activeCode}
         />
       </div>
+
+        <ChatWithAI />
 
       {/* Terminal Section */}
       {terminalVisible && (

@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import Navbar from "../components/Navbar";
-import Filerbar from "../components/filebar";
 import CodeEditor from "../components/codeEditor";
 import Terminal from "../components/terminal";
 import Menubar from "../components/Menubar";
+import ChatWithAI from "../components/ChatWithAI";
 
 const Guest = ({onLogout}) => {
   const [fileSectionVisible, setFileSectionVisible] = useState(true);
@@ -31,6 +31,8 @@ const Guest = ({onLogout}) => {
         <CodeEditor fileSectionWidth={fileSectionWidth} fileSectionVisible={fileSectionVisible} />
 
       </div>
+
+      <ChatWithAI/>
 
         {/* Terminal Section */}
       {terminalVisible && <Terminal terminalHeight={terminalHeight} setTerminalHeight={setTerminalHeight} setTerminalVisible={setTerminalVisible} />}
