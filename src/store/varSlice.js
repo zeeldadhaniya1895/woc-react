@@ -47,17 +47,48 @@ const varSlice = createSlice({
     toggleLineWrapping: (state) => {
       state.editor.isLineWrapping = !state.editor.isLineWrapping;
     },
+    // setActiveTab: (state, action) => {
+    //   state.editor.activeTab = action.payload;
+    //   if (action.payload?.language) {
+    //     state.editor.language = action.payload.language;
+    //     console.log("action.payload.language",action.payload.language);
+    //     console.log("LANGUAGE_DATA",LANGUAGE_DATA);
+    //     const langData = LANGUAGE_DATA.find(
+    //       (lang) => lang.name === action.payload.language
+    //     );
+    //     console.log("langData",langData.info);
+    //     if (langData) {
+    //       state.editor.info = langData.info;
+    //       state.editor.icon = langData.icon;
+    //       state.editor.version = langData.version;
+    //     }
+    //   }
+    // },
     setActiveTab: (state, action) => {
       state.editor.activeTab = action.payload;
       if (action.payload?.language) {
         state.editor.language = action.payload.language;
-        const langData = LANGUAGE_DATA.find(
-          (lang) => lang.name === action.payload.language
+        // console.log("action.payload.language", action.payload.language);
+        // console.log("LANGUAGE_DATA", LANGUAGE_DATA);
+        
+        const langIndex = LANGUAGE_DATA.findIndex(
+          (lang) => lang.language.toLowerCase() === action.payload.language.toLowerCase()
         );
-        if (langData) {
-          state.editor.info = langData.info;
-          state.editor.icon = langData.icon;
-          state.editor.version = langData.version;
+       
+        
+        // console.log("langIndex", langIndex);
+        
+        if (langIndex !== -1) {
+          state.editor.info = LANGUAGE_DATA[langIndex].info;
+          state.editor.icon = LANGUAGE_DATA[langIndex].icon;
+          state.editor.version = LANGUAGE_DATA[langIndex].version;
+          // console.log("Updated state with language data:", LANGUAGE_DATA[langIndex]);
+        } else {
+          console.warn("Language not found in LANGUAGE_DATA");
+          // Set defaults if language not found
+          state.editor.info = "Language information not available";
+          state.editor.icon = "";
+          state.editor.version = "latest";
         }
       }
     },

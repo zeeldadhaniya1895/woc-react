@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   setEditorCode,
   setThemecolor,
+  setActiveTab, setActiveCode
 } from "../store/varSlice";
 import { EditorState } from "@codemirror/state";
 import { EditorView, keymap, highlightActiveLine } from "@codemirror/view";
@@ -106,7 +107,7 @@ export default function CodeEditor({
 
   // Handle code updates when tab changes
   useEffect(() => {
-    console.log("CodeEditor received activeTab:", activeTab); // Debug log
+    // console.log("CodeEditor received activeTab:", activeTab); // Debug log
   // console.log("CodeEditor received activeCode:", activeCode); // Debug log
   
     if (activeTab && activeCode && editorRef.current) {
@@ -127,10 +128,8 @@ export default function CodeEditor({
         const user = await authService.getCurrentUser();
         if (user && activeTab) {
           await updateTabCode(user.email, activeTab.id, code);
-          // dispatch(updateTab({
-          //   id: activeTab.id,
-          //   updates: { code }
-          // }));
+          dispatch(setActiveCode(code));
+          dispatch(setActiveTab(activeTab));
         }
       } catch (error) {
         console.error('Error saving code:', error);

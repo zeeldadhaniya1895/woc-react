@@ -4,7 +4,7 @@ import { deleteTab, renameTab, getTabCode, getUserTabs } from '../appwrite/datab
 import authService from '../appwrite/auth.service';
 import { FaTrash, FaEdit, FaCheck, FaTimes } from 'react-icons/fa';
 
-export default function Filebar({ fileSectionWidth, setFileSectionWidth,onTabSelect }) {
+export default function Filebar({ fileSectionWidth, setFileSectionWidth,onTabSelect,activeTab}) {
   const [tabs, setTabs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -24,6 +24,12 @@ export default function Filebar({ fileSectionWidth, setFileSectionWidth,onTabSel
         // Fetch tabs using user's email
         const userTabs = await getUserTabs(user.email);
         setTabs(userTabs);
+         // Set initial active tab (first tab in the list)
+         if (userTabs.length > 0) {
+          const firstTab = userTabs[0];
+          const code = await getTabCode(user.email, firstTab.id);
+          onTabSelect(firstTab, code);
+        }
       } catch (err) {
         console.error('Error fetching tabs:', err);
         setError(err.message);

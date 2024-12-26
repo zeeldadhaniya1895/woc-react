@@ -109,6 +109,7 @@ export default function Menubar({ fileSectionVisible, setFileSectionVisible, ter
         </button>
 
         {/* Language Dropdown */}
+        {guest && (
         <div className="relative">
           <button
             onClick={() => setLanguageDropdownVisible(!isLanguageDropdownVisible)}
@@ -129,7 +130,7 @@ export default function Menubar({ fileSectionVisible, setFileSectionVisible, ter
             ))}
           </select>
         </div>
-
+        )}
         {isLanguageDropdownVisible2 && (
           <div className="absolute bg-gray-800 text-white p-4 rounded shadow-md">
             <label className="block mb-2">Select Language:</label>
