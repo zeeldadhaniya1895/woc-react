@@ -254,7 +254,7 @@ export default function CodeEditor({
     {/* Download Button with Icon */}
     <button
       onClick={handleDownload}
-      className="absolute right-4 top-2 p-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 focus:outline-none shadow-md transition-all"
+      className="static right-4 top-2 p-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 focus:outline-none shadow-md transition-all"
       aria-label="Download Code"
     >
       <svg

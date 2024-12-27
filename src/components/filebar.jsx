@@ -236,9 +236,9 @@ export default function Filebar({ fileSectionWidth, setFileSectionWidth, onTabSe
             <button onClick={handleNewEditor} className="text-green-500">
               <FaPlus />
             </button>
-            {/* <button onClick={handleCloseFilebar} className="text-red-500">
+            <button onClick={handleCloseFilebar} className="text-red-500">
               <FaTimesCircle />
-            </button> */}
+            </button>
           </div>
         </div>
         <hr className="w-full border-gray-700 mb-4" />
