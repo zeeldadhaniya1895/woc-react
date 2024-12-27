@@ -26,6 +26,7 @@ import { closeBrackets, closeBracketsKeymap } from "@codemirror/autocomplete";
 // import { githubLight } from '@codemirror/theme-github';  // Changed import
 import authService from "../appwrite/auth.service";
 import { updateTabCode } from "../appwrite/database.service";
+import { LANGUAGE_DATA } from "../config/constants";
 // Formate code
 import prettier from "prettier/standalone";
 import prettierPluginJava from "prettier-plugin-java";
@@ -97,13 +98,7 @@ export default function CodeEditor({
     clouds,
   };
 
-  const fileExtensions = {
-    javascript: "js",
-    python: "py",
-    cpp: "cpp",
-    java: "java",
-    c:"c",
-  };
+  const fileExtensions = {  javascript: "js",  python: "py",  cpp: "cpp",  java: "java",  c:"c",  csharp: "cs",  go: "go",  html: "html",  css: "css",  php: "php",  ruby: "rb",rust: "rs",kotlin: "kt",swift: "swift",typescript: "ts",  lua: "lua",  sql: "sql",  r: "r",  perl: "pl",  haskell: "hs",  dart: "dart",  scala: "scala",  elixir: "ex",  clojure: "clj",};
 
   // Handle code updates when tab changes
   useEffect(() => {
@@ -211,25 +206,25 @@ export default function CodeEditor({
     };
   }, [theme, themec, isLineWrapping, dispatch, language,activeTab]);
 
-  // const handleDownload = () => {
-  //   const code = editorRef.current.state.doc.toString();
-  //   const fileExtension = fileExtensions[language] || "txt";
-  //   const fileName = `code.${fileExtension}`;
-  //   downloadFile(code, fileName);
-  // };
   const handleDownload = () => {
-    if (editorRef.current) {
-      const code = editorRef.current.state.doc.toString();
-      const fileName = activeTab?.name || `code.${language}`;
-      const blob = new Blob([code], { type: 'text/plain' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = fileName;
-      link.click();
-      URL.revokeObjectURL(url);
-    }
+    const code = editorRef.current.state.doc.toString();
+    const fileExtension = fileExtensions[language] || "txt";
+    const fileName = `code.${fileExtension}`;
+    downloadFile(code, fileName);
   };
+  // const handleDownload = () => {
+  //   if (editorRef.current) {
+  //     const code = editorRef.current.state.doc.toString();
+  //     const fileName = activeTab?.name || `code.${language}`;
+  //     const blob = new Blob([code], { type: 'text/plain' });
+  //     const url = URL.createObjectURL(blob);
+  //     const link = document.createElement('a');
+  //     link.href = url;
+  //     link.download = fileName;
+  //     link.click();
+  //     URL.revokeObjectURL(url);
+  //   }
+  // };
   return (
     <div
   className={`flex flex-1 flex-col overflow-hidden relative ${

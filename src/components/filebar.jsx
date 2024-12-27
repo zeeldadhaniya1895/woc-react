@@ -180,14 +180,14 @@ export default function Filebar({ fileSectionWidth, setFileSectionWidth, onTabSe
   
       const result = await addNewTab(user.email, modalFileName, selectedLanguage);
       if (result.success) {
-        const newTab = { id: result.tabId, name: modalFileName, language: selectedLanguage };
+        const newTab = { id: result.tab.id, name: modalFileName, language: selectedLanguage, code:result.tab.code };
         dispatch(setEditorLanguage(selectedLanguage));
   
         // Update tabs state and trigger rerender
         setTabs((prevTabs) => [...prevTabs, newTab]);
   
         // Optionally set the new tab as active
-        onTabSelect(newTab, "");
+        onTabSelect(newTab, result.tab.code);
   
         setNotificationModal({
           type: "success",
