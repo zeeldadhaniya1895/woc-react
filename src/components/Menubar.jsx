@@ -52,7 +52,10 @@ export default function Menubar({ fileSectionVisible, setFileSectionVisible, ter
         {!guest && (
           <button
             onClick={() => setFileSectionVisible(!fileSectionVisible)}
-            className="p-2 bg-gray-800 text-white rounded-md hover:bg-purple-500 transition-all shadow-md"
+            className="
+            
+            p-2 bg-gray-800 text-white rounded-md hover:bg-purple-500 transform hover:scale-105 transition-all duration-200 shadow-md
+            "
           >
             <FaBars className="text-lg" />
           </button>
@@ -64,7 +67,7 @@ export default function Menubar({ fileSectionVisible, setFileSectionVisible, ter
             setTerminalVisible(!terminalVisible);
             setTerminalHeight(250);
           }}
-          className="p-2 bg-gray-800 text-white rounded-md hover:bg-purple-500 transition-all shadow-md"
+          className="p-2 bg-gray-800 text-white rounded-md hover:bg-purple-500 transform hover:scale-105 transition-all duration-200 shadow-md"
         >
           <FaTerminal className="text-lg" />
         </button>
@@ -74,7 +77,7 @@ export default function Menubar({ fileSectionVisible, setFileSectionVisible, ter
         <div className="relative">
           <button
             onClick={() => setLanguageDropdownVisible(!isLanguageDropdownVisible)}
-            className="p-2 bg-gray-800 text-white rounded-md hover:bg-purple-500 shadow-md sm:hidden"
+            className="p-2 bg-gray-800 text-white rounded-md hover:bg-purple-500 transform hover:scale-105 transition-all duration-200 shadow-md"
           >
             <FaLanguage />
           </button>

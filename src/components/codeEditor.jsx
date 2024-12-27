@@ -30,7 +30,7 @@ import { LANGUAGE_DATA } from "../config/constants";
 // Formate code
 import prettier from "prettier/standalone";
 import prettierPluginJava from "prettier-plugin-java";
-
+import { FaSpinner } from 'react-icons/fa';
 // Helper function to download a file
 function downloadFile(content, fileName) {
   const blob = new Blob([content], { type: "text/plain" });
@@ -82,6 +82,15 @@ export default function CodeEditor({
   activeTab,
   activeCode,
 }) {
+
+  const LoadingSkeleton = () => (
+    <div className="h-full flex items-center justify-center bg-gray-900">
+      <div className="text-center">
+        <FaSpinner className="animate-spin text-4xl text-purple-500 mb-4" />
+        <p className="text-gray-400">Select a file to start coding...</p>
+      </div>
+    </div>
+  );
   const dispatch = useDispatch();
   const editorContainerRef = useRef(null);
   const editorRef = useRef(null);
@@ -232,6 +241,10 @@ export default function CodeEditor({
   }`}
   style={{ marginLeft: fileSectionVisible ? fileSectionWidth : 0 }}
 >
+{!activeTab ? (
+        <LoadingSkeleton />
+      ) : (
+        <>
   {/* Header Section */}
   <div
     className="p-2 text-gray-200 relative flex items-center justify-between"
@@ -280,6 +293,8 @@ export default function CodeEditor({
     className="flex-1 bg-gray-800 h-full overflow-auto text-gray-400"
     style={{ height: "100%", backgroundColor: themec }}
   ></div>
+  </>
+      )}
 </div>
 
   );

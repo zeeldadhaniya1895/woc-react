@@ -14,6 +14,7 @@ const Ide = ({ onLogout }) => {
   const [terminalHeight, setTerminalHeight] = useState(250);
   const [activeTab, setactiveTab] = useState(null);
   const [activeCode, setactiveCode] = useState("");
+
 const dispatch = useDispatch();
   const handleTabSelect = (tab, code) => {
     setactiveTab(tab);
@@ -21,6 +22,7 @@ const dispatch = useDispatch();
     dispatch(setActiveTab(tab));
     dispatch(setActiveCode(code));
   };
+
   return (
     <div
       className="h-screen flex flex-col overflow-hidden border-2 border-b-0 border-purple-800 shadow-lg border-r-purple-300"
@@ -34,13 +36,14 @@ const dispatch = useDispatch();
       <Navbar onLogout={onLogout} guest={false} />
       
       {/*Menubar */}
-      <Menubar fileSectionVisible={fileSectionVisible} setFileSectionVisible={setFileSectionVisible} terminalVisible={terminalVisible} setTerminalVisible={setTerminalVisible} setTerminalHeight={setTerminalHeight} guest={false}
+      <Menubar fileSectionVisible={fileSectionVisible} setFileSectionVisible={setFileSectionVisible} terminalVisible={terminalVisible} setTerminalVisible={setTerminalVisible} setTerminalHeight={setTerminalHeight} guest={false} className="left-0"
       // onCreateEditor={onCreateEditor}
        />
 
       {/* Main Content */}
       <div className="flex flex-1 relative overflow-hidden bg-gray-800">
         {/* File Sidebar */}
+        
         {fileSectionVisible && (
           <Filerbar
             fileSectionWidth={fileSectionWidth}
@@ -48,11 +51,13 @@ const dispatch = useDispatch();
             setFileSectionVisible={setFileSectionVisible}
             onTabSelect={(tab,code)=>{handleTabSelect(tab,code)}}
             activeTab={activeTab}
-            style={{
-              zIndex:10000,
-            }}
+            
+            // style={{
+            //   zIndex:100,
+            // }}
           />
         )}
+       
 
         {/* IDE Section */}
         <CodeEditor
@@ -65,14 +70,18 @@ const dispatch = useDispatch();
 
         <ChatWithAI />
 
-      {/* Terminal Section */}
+      {/* Terminal Section */} 
       {terminalVisible && (
         <Terminal
           terminalHeight={terminalHeight}
           setTerminalHeight={setTerminalHeight}
           setTerminalVisible={setTerminalVisible}
+         
         />
       )}
+      
+      
+      
     </div>
   );
 };
