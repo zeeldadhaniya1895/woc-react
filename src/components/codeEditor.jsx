@@ -250,7 +250,8 @@ export default function CodeEditor({
         className="inline-block w-6 h-6 mr-2"
       />
       <span style={{ color: "GrayText" }}>
-        {language.toUpperCase()}: {info}
+      {activeTab?.name || `code.${language} `}
+        { language.toUpperCase()}: {info}
         {/* {activeTab.language.toUpperCase()}: {info} */}
       </span>
     </div>

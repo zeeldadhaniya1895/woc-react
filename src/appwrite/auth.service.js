@@ -1,5 +1,6 @@
 // import { initializeApp } from "firebase/app";
-import { createUserWithDefaultTab } from './database.service';
+import { createUserWithDefaultTab ,checkUserInDB} from './database.service';
+// import { fetchSignInMethodsForEmail } from "firebase/auth";
 import {
     getAuth,
     createUserWithEmailAndPassword,
@@ -60,6 +61,10 @@ class AuthService {
         return user ? JSON.parse(user) : null;
     }
 
+    // async checkUserExists(email) {
+    //     const methods = await fetchSignInMethodsForEmail(this.auth, email);
+    //     return methods.length > 0;
+    // }
     /**
      * Create a new account
      */
@@ -67,6 +72,15 @@ class AuthService {
 
 async createAccount({ email, password, name, rememberMe=false }) {
     try {
+        // Check if user exists
+        // const userExists = await this.checkUserExists(email);
+        // if (userExists) {
+        //     throw new Error("User already exists with this email");
+        // }
+        const exists = await checkUserInDB(email);
+        if (exists) {
+          throw new Error("User already exists with this email");
+        }
         const userCredential = await createUserWithEmailAndPassword(this.auth, email, password);
         const user = userCredential.user;
 
@@ -115,10 +129,17 @@ async createAccount({ email, password, name, rememberMe=false }) {
             const provider = new GoogleAuthProvider();
             const result = await signInWithPopup(this.auth, provider);
             const user = result.user;
+            // console.log(user.email);
+            // const userExists = await this.checkUserExists(user.email);
+              // Check if user exists in database
+    const exists = await checkUserInDB(user.email);
+    if (!exists) {
+      await createUserWithDefaultTab(user.email);
+    }
             // console.log(user);
             await this.storeSession(user);
             
-            await createUserWithDefaultTab(user.email);
+            // await createUserWithDefaultTab(user.email);
             // Redirect to /ide after successful login
             window.location.href = "/ide";
 
