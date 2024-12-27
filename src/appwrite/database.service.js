@@ -140,7 +140,7 @@ export const deleteTab = async (email, tabId) => {
     }
   };
  
-  export const renameTab = async (email, tabId, newFileName) => {
+  export const renameTab = async (email, tabId, newFileName,newLanguage) => {
     try {
       // Input validation
       if (!newFileName || newFileName.trim() === '') {
@@ -162,7 +162,7 @@ export const deleteTab = async (email, tabId) => {
   
       // Update tab name while preserving other properties
       const updatedTabs = userData.tabs.map(tab => 
-        tab.id === tabId ? { ...tab, name: newFileName } : tab
+        tab.id === tabId ? { ...tab, name: newFileName,language:newLanguage} : tab
       );
   
       await updateDoc(userRef, { tabs: updatedTabs });

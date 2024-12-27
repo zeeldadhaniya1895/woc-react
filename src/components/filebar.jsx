@@ -1,23 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { Rnd } from 'react-rnd';
-import { deleteTab, renameTab, getTabCode, getUserTabs,addNewTab, } from '../appwrite/database.service';
+import { deleteTab, renameTab, getTabCode, getUserTabs, addNewTab, } from '../appwrite/database.service';
 import authService from '../appwrite/auth.service';
-import { FaTrash, FaEdit, FaCheck, FaTimes ,
+import {
+  FaTrash, FaEdit, FaCheck, FaTimes,
   FaPlus,
-  FaTimesCircle,} from 'react-icons/fa';
-  import { useDispatch } from "react-redux";
+  FaTimesCircle,
+} from 'react-icons/fa';
+import { useDispatch } from "react-redux";
 import { LANGUAGE_DATA } from "../config/constants";
 import { setEditorLanguage } from "../store/varSlice";
-import { Icon } from "@mui/material";
 import { ICON } from "../config/icon";
 
-export default function Filebar({ fileSectionWidth, setFileSectionWidth ,onTabSelect,
-  setFileSectionVisible,activeTab}) {
+export default function Filebar({ fileSectionWidth, setFileSectionWidth, onTabSelect,
+  setFileSectionVisible, activeTab }) {
   const [tabs, setTabs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [editingTab, setEditingTab] = useState(null);
-  const [newFileName, setNewFileName] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalFileName, setModalFileName] = useState("");
   const [selectedLanguage, setSelectedLanguage] = useState("");
@@ -25,6 +24,61 @@ export default function Filebar({ fileSectionWidth, setFileSectionWidth ,onTabSe
   const [notificationModal, setNotificationModal] = useState(null);
   const [tabToDelete, setTabToDelete] = useState(null);
   const dispatch = useDispatch();
+
+  //edit file functionality
+
+  const [renameModalOpen, setRenameModalOpen] = useState(false);
+  const [renameModalData, setRenameModalData] = useState({ tabId: null, fileName: "", language: "" });
+
+  // Function to open rename modal
+  const handleRenameClick = (tab) => {
+    setRenameModalData({ tabId: tab.id, fileName: tab.name, language: tab.language });
+    setRenameModalOpen(true);
+  };
+
+  // Submit function for rename modal
+  const handleRenameSubmit = async () => {
+    try {
+      const { tabId, fileName, language } = renameModalData;
+
+      if (!fileName || !language) {
+        setNotificationModal({
+          type: "error",
+          message: "Please provide a file name and select a language.",
+        });
+        return;
+      }
+
+      const user = await authService.getCurrentUser();
+      const result = await renameTab(user.email, tabId, fileName, language);
+
+      if (result.success) {
+        setTabs(
+          tabs.map((tab) =>
+            tab.id === tabId ? { ...tab, name: fileName, language } : tab
+          )
+        );
+        setNotificationModal({
+          type: "success",
+          message: "Tab updated successfully!",
+        });
+      } else {
+        setNotificationModal({
+          type: "error",
+          message: result.message,
+        });
+      }
+    } catch (error) {
+      console.error("Error renaming tab:", error);
+      setNotificationModal({
+        type: "error",
+        message: "An error occurred while updating the tab.",
+      });
+    } finally {
+      setRenameModalOpen(false);
+      setTimeout(() => setNotificationModal(null), 2000);
+    }
+  };
 
 
   useEffect(() => {
@@ -37,8 +91,8 @@ export default function Filebar({ fileSectionWidth, setFileSectionWidth ,onTabSe
         }
         const userTabs = await getUserTabs(user.email);
         setTabs(userTabs);
-         // Set initial active tab (first tab in the list)
-         if (userTabs.length > 0) {
+        // Set initial active tab (first tab in the list)
+        if (userTabs.length > 0) {
           const firstTab = userTabs[0];
           const code = await getTabCode(user.email, firstTab.id);
           onTabSelect(firstTab, code);
@@ -103,38 +157,7 @@ export default function Filebar({ fileSectionWidth, setFileSectionWidth ,onTabSe
     }
   };
 
-  const handleRenameClick = (tab) => {
-    setEditingTab(tab.id);
-    setNewFileName(tab.name);
-  };
 
-  const handleRenameSubmit = async (tabId) => {
-    try {
-      const user = await authService.getCurrentUser();
-      const result = await renameTab(user.email, tabId, newFileName);
-      if (result.success) {
-        setTabs(tabs.map((tab) => (tab.id === tabId ? { ...tab, name: newFileName } : tab)));
-        setNotificationModal({
-          type: "success",
-          message: "Tab renamed successfully!",
-        });
-      } else {
-        setNotificationModal({
-          type: "error",
-          message: result.message,
-        });
-      }
-    } catch (error) {
-      console.error("Error renaming tab:", error);
-      setNotificationModal({
-        type: "error",
-        message: "An error occurred while renaming the tab.",
-      });
-    } finally {
-      setEditingTab(null);
-      setTimeout(() => setNotificationModal(null), 2000);
-    }
-  };
 
   const handleNewEditor = () => {
     setIsModalOpen(true);
@@ -149,16 +172,23 @@ export default function Filebar({ fileSectionWidth, setFileSectionWidth ,onTabSe
         });
         return;
       }
-
+  
       const user = await authService.getCurrentUser();
       if (!user) {
         throw new Error("No user logged in");
       }
-
+  
       const result = await addNewTab(user.email, modalFileName, selectedLanguage);
       if (result.success) {
+        const newTab = { id: result.tabId, name: modalFileName, language: selectedLanguage };
         dispatch(setEditorLanguage(selectedLanguage));
-        setTabs([...tabs, { id: result.tabId, name: modalFileName }]);
+  
+        // Update tabs state and trigger rerender
+        setTabs((prevTabs) => [...prevTabs, newTab]);
+  
+        // Optionally set the new tab as active
+        onTabSelect(newTab, "");
+  
         setNotificationModal({
           type: "success",
           message: "File created successfully!",
@@ -182,6 +212,7 @@ export default function Filebar({ fileSectionWidth, setFileSectionWidth ,onTabSe
       setTimeout(() => setNotificationModal(null), 2000);
     }
   };
+  
 
   const handleCloseFilebar = () => {
     setFileSectionVisible(false);
@@ -217,43 +248,28 @@ export default function Filebar({ fileSectionWidth, setFileSectionWidth ,onTabSe
           <ol className="w-full space-y-2">
             {tabs.map((tab) => (
               <li key={tab.id} className="flex items-center justify-between text-gray-300 hover:bg-gray-800 p-2 rounded">
-                {editingTab === tab.id ? (
-                  <div className="flex items-center gap-2">
-                    <input
-                      type="text"
-                      value={newFileName}
-                      onChange={(e) => setNewFileName(e.target.value)}
-                      className="bg-gray-700 px-2 py-1 rounded"
+
+                <>
+                  <span>
+                    <img
+                      src={ICON[tab.language]}
+                      alt={`${tab.language} Icon`}
+                      className="inline-block w-6 h-6 mr-2"
                     />
-                    <button onClick={() => handleRenameSubmit(tab.id)}>
-                      <FaCheck className="text-green-500" />
+                  </span>
+                  <span className="cursor-pointer flex-grow" onClick={() => handleTabClick(tab)}>
+                    {tab.name}
+                  </span>
+                  <div className="flex gap-2">
+                    <button onClick={() => handleRenameClick(tab)}>
+                      <FaEdit className="text-blue-500" />
                     </button>
-                    <button onClick={() => setEditingTab(null)}>
-                      <FaTimes className="text-red-500" />
+                    <button onClick={() => handleDeleteClick(tab.id)}>
+                      <FaTrash className="text-red-500" />
                     </button>
                   </div>
-                ) : (
-                  <>
-                  <span>
-                  <img
-        src={ICON[tab.language]}
-        alt={`${tab.language} Icon`}
-        className="inline-block w-6 h-6 mr-2"
-      />
-                  </span>
-                    <span className="cursor-pointer flex-grow" onClick={() => handleTabClick(tab)}>
-                      {tab.name}
-                    </span>
-                    <div className="flex gap-2">
-                      <button onClick={() => handleRenameClick(tab)}>
-                        <FaEdit className="text-blue-500" />
-                      </button>
-                      <button onClick={() => handleDeleteClick(tab.id)}>
-                        <FaTrash className="text-red-500" />
-                      </button>
-                    </div>
-                  </>
-                )}
+                </>
+
               </li>
             ))}
           </ol>
@@ -337,6 +353,59 @@ export default function Filebar({ fileSectionWidth, setFileSectionWidth ,onTabSe
           <p>{notificationModal.message}</p>
         </div>
       )}
+
+      {/* Rename Modal */}
+      {renameModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-gray-800 text-white p-6 rounded shadow-lg w-1/3">
+            <h3 className="text-lg font-semibold mb-4">Rename File</h3>
+            <div className="mb-4">
+              <label className="block mb-2">File Name:</label>
+              <input
+                type="text"
+                value={renameModalData.fileName}
+                onChange={(e) =>
+                  setRenameModalData({ ...renameModalData, fileName: e.target.value })
+                }
+                className="w-full px-3 py-2 bg-gray-700 rounded"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block mb-2">Select Language:</label>
+              <select
+                value={renameModalData.language}
+                onChange={(e) =>
+                  setRenameModalData({ ...renameModalData, language: e.target.value })
+                }
+                className="w-full px-3 py-2 bg-gray-700 rounded"
+              >
+                <option value="">Select Language</option>
+                {LANGUAGE_DATA.map((lang, index) => (
+                  <option key={index} value={lang.language}>
+                    {lang.language.toUpperCase()} (v{lang.version})
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="flex justify-end gap-4">
+              <button
+                onClick={() => setRenameModalOpen(false)}
+                className="px-4 py-2 bg-red-500 rounded hover:bg-red-600"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleRenameSubmit}
+                className="px-4 py-2 bg-green-500 rounded hover:bg-green-600"
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+
     </>
   );
 }
