@@ -70,6 +70,7 @@ export default function Menubar({ fileSectionVisible, setFileSectionVisible, ter
         </button>
 
         {/* Language Dropdown */}
+        {guest && (
         <div className="relative">
           <button
             onClick={() => setLanguageDropdownVisible(!isLanguageDropdownVisible)}
@@ -90,8 +91,22 @@ export default function Menubar({ fileSectionVisible, setFileSectionVisible, ter
             ))}
           </select>
         </div>
-
-        
+        )}
+        {/* {isLanguageDropdownVisible2 && (
+          <div className="absolute bg-gray-800 text-white p-4 rounded shadow-md">
+            <label className="block mb-2">Select Language:</label>
+            <select
+              className="px-2 py-1 bg-gray-700 rounded"
+              onChange={handleLanguageChange2}
+            >
+              {LANGUAGE_DATA.map((lang, index) => (
+                <option key={index} value={lang.language}>
+                  {lang.language.toUpperCase()} (v{lang.version})
+                </option>
+              ))}
+            </select>
+          </div>
+        )} */}
         {/* Theme Dropdown */}
 
       </div>

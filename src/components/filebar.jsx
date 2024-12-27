@@ -1,32 +1,18 @@
-import React, { useState, useEffect } from "react";
-import { Rnd } from "react-rnd";
-import {
-  deleteTab,
-  renameTab,
-  getTabCode,
-  getUserTabs,
-  addNewTab,
-} from "../appwrite/database.service";
-import authService from "../appwrite/auth.service";
-import {
-  FaTrash,
-  FaEdit,
-  FaCheck,
-  FaTimes,
+import React, { useState, useEffect } from 'react';
+import { Rnd } from 'react-rnd';
+import { deleteTab, renameTab, getTabCode, getUserTabs,addNewTab, } from '../appwrite/database.service';
+import authService from '../appwrite/auth.service';
+import { FaTrash, FaEdit, FaCheck, FaTimes ,
   FaPlus,
-  FaTimesCircle,
-} from "react-icons/fa";
-import { useDispatch } from "react-redux";
+  FaTimesCircle,} from 'react-icons/fa';
+  import { useDispatch } from "react-redux";
 import { LANGUAGE_DATA } from "../config/constants";
 import { setEditorLanguage } from "../store/varSlice";
 import { Icon } from "@mui/material";
 import { ICON } from "../config/icon";
-export default function Filebar({
-  fileSectionWidth,
-  setFileSectionWidth,
-  onTabSelect,
-  setFileSectionVisible,
-}) {
+
+export default function Filebar({ fileSectionWidth, setFileSectionWidth ,onTabSelect,
+  setFileSectionVisible,activeTab}) {
   const [tabs, setTabs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -51,6 +37,12 @@ export default function Filebar({
         }
         const userTabs = await getUserTabs(user.email);
         setTabs(userTabs);
+         // Set initial active tab (first tab in the list)
+         if (userTabs.length > 0) {
+          const firstTab = userTabs[0];
+          const code = await getTabCode(user.email, firstTab.id);
+          onTabSelect(firstTab, code);
+        }
       } catch (err) {
         console.error("Error fetching tabs:", err);
         setError(err.message);
@@ -66,6 +58,7 @@ export default function Filebar({
     try {
       const user = await authService.getCurrentUser();
       const code = await getTabCode(user.email, tab.id);
+      // console.log('Code:', code);
       onTabSelect(tab, code);
     } catch (error) {
       console.error("Error fetching tab code:", error);
@@ -193,7 +186,6 @@ export default function Filebar({
   const handleCloseFilebar = () => {
     setFileSectionVisible(false);
   };
-
   return (
     <>
       <Rnd

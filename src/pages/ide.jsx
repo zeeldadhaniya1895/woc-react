@@ -1,22 +1,25 @@
 import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import Navbar from "../components/Navbar";
 import Filerbar from "../components/filebar";
 import CodeEditor from "../components/codeEditor";
 import Terminal from "../components/terminal";
 import Menubar from "../components/Menubar";
 import ChatWithAI from "../components/ChatWithAI";
-
+import {setActiveCode,setActiveTab} from "../store/varSlice";
 const Ide = ({ onLogout }) => {
   const [fileSectionVisible, setFileSectionVisible] = useState(true);
   const [fileSectionWidth, setFileSectionWidth] = useState(250);
   const [terminalVisible, setTerminalVisible] = useState(false);
   const [terminalHeight, setTerminalHeight] = useState(250);
-  const [activeTab, setActiveTab] = useState(null);
-  const [activeCode, setActiveCode] = useState("");
-
+  const [activeTab, setactiveTab] = useState(null);
+  const [activeCode, setactiveCode] = useState("");
+const dispatch = useDispatch();
   const handleTabSelect = (tab, code) => {
-    setActiveTab(tab);
-    setActiveCode(code);
+    setactiveTab(tab);
+    setactiveCode(code);
+    dispatch(setActiveTab(tab));
+    dispatch(setActiveCode(code));
   };
   return (
     <div
@@ -44,6 +47,7 @@ const Ide = ({ onLogout }) => {
             setFileSectionWidth={setFileSectionWidth}
             setFileSectionVisible={setFileSectionVisible}
             onTabSelect={handleTabSelect}
+            activeTab={activeTab}
             style={{
               zIndex:10000,
             }}
