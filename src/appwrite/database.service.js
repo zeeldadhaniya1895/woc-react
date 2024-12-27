@@ -36,11 +36,22 @@ export const createUserWithDefaultTab = async (email) => {
     email,
     tabs: [{
       id: uuidv4(),
-      name: "default.js",
+      name: "default",
       language: "javascript",
       code: "console.log('Hello World');"
     }]
   });
+};
+
+export const checkUserInDB = async (email) => {
+  try {
+    const userRef = doc(db, "users", email);
+    const userDoc = await getDoc(userRef);
+    return userDoc.exists();
+  } catch (error) {
+    console.error("Error checking user in database:", error);
+    throw error;
+  }
 };
 
 export const addNewTab = async (email, tabName, language) => {
