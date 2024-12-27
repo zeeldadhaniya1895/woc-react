@@ -43,13 +43,21 @@ export default function InputOutputTerminal({ terminalHeight, setTerminalHeight,
   const handleCloseTerminal = () => {
     setTerminalVisible(false);
   };
+  const sharedTextStyle = {
+    whiteSpace: "pre-wrap",
+    fontFamily: "monospace",
+    lineHeight: "1.5",
+    wordBreak: "break-word",
+    padding: "1rem",
+    color: "#d1d5db", // Slightly lighter gray for better readability
+  };
 
   return (
     <Rnd
       size={{ height: terminalHeight, width: "100%" }}
       maxHeight={735}
       minHeight={100}
-      position={{ x: 0, y: window.innerHeight - terminalHeight-0.5 }}
+      position={{ x: 0, y: window.innerHeight - terminalHeight - 0.5 }}
       onResizeStop={(e, direction, ref) => {
         setTerminalHeight(ref.offsetHeight);
       }}
@@ -57,19 +65,17 @@ export default function InputOutputTerminal({ terminalHeight, setTerminalHeight,
       enableResizing={{ top: true }}
       disableDragging={true}
     >
-      {/* Resizable horizontal split between Input and Output */}
       <Split
         className="flex flex-row h-full"
-        sizes={[50, 50]} // Default 50-50 split
-        minSize={375} // Minimum size for each section
-        gutterSize={10} // Space for the draggable gutter
+        sizes={[50, 50]}
+        minSize={375}
+        gutterSize={10}
         gutterAlign="center"
         snapOffset={0}
         direction="horizontal"
         cursor="col-resize"
         style={{ display: "flex" }}
       >
-        {/* Input Section */}
         <div className="bg-gray-800 p-3 rounded text-sm overflow-auto flex flex-col">
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-lg font-bold text-white">Input</h3>
@@ -80,7 +86,8 @@ export default function InputOutputTerminal({ terminalHeight, setTerminalHeight,
             />
           </div>
           <textarea
-            className="flex-1 bg-gray-700 text-gray-200 p-2 rounded resize-none"
+            className="flex-1 bg-gray-900 rounded resize-none"
+            style={sharedTextStyle}
             value={input}
             onChange={handleInputChange}
             onDrop={handleDrop}
@@ -89,13 +96,9 @@ export default function InputOutputTerminal({ terminalHeight, setTerminalHeight,
           ></textarea>
         </div>
 
-        {/* Output Section */}
         <div
-          className={`bg-gray-800 p-3 rounded text-sm overflow-auto flex flex-col border-l-4 border-gray-200 ${
-              code === 0 ? "border-green-400" : ""
-            }${
-              code === 1 ? "border-red-400":""
-            }`}
+          className={`bg-gray-800 p-3 rounded text-sm overflow-auto flex flex-col border-l-4 ${code === 0 ? "border-green-400" : ""
+            }${code && code !== 0 ? "border-red-400" : ""}`}
         >
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-lg font-bold text-white">Output</h3>
@@ -108,17 +111,18 @@ export default function InputOutputTerminal({ terminalHeight, setTerminalHeight,
             </button>
           </div>
           <div
-            className={`flex-1 bg-gray-700 p-2 rounded text-sm overflow-auto text-gray-200 ${
-              code === 0 ? "text-green-400" : ""
-            }${
-              code === 1 ? "text-red-400":""
-            }`}
-            style={{ whiteSpace: "pre-wrap" }}
+            className={`flex-1 bg-gray-900 rounded text-sm overflow-auto`}
+            style={{
+              ...sharedTextStyle,
+              color: code === 0 ? "#22c55e" : code && code !== 0 ? "#ef4444" : "#d1d5db",
+            }}
           >
             {output || "Output will be shown here."}
           </div>
+
         </div>
       </Split>
     </Rnd>
   );
+
 }

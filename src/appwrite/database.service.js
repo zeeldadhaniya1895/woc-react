@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import {
     getAuth
 } from "firebase/auth";
+import{LANGUAGE_DATA} from "../config/constants";
 // const firebaseConfigDb = {
 //   apiKey: "AIzaSyBHNcwFWQ8xfOxitQgCnp-Hdgd98bADY_Y",
 //   authDomain: "codeeditor-5e6a3.firebaseapp.com",
@@ -68,12 +69,14 @@ export const addNewTab = async (email, tabName, language) => {
       if (existingTab) {
         throw new Error('A file with this name already exists');
       }
-  
+  const code=LANGUAGE_DATA.find(
+    (languages) => languages.language == language
+  );
       const newTab = {
         id: uuidv4(),
         name: tabName,
         language,
-        code: ""
+        code: code.codeSnippet,
       };
   
       await updateDoc(userRef, {
@@ -151,7 +154,7 @@ export const deleteTab = async (email, tabId) => {
     }
   };
  
-  export const renameTab = async (email, tabId, newFileName) => {
+  export const renameTab = async (email, tabId, newFileName,newLanguage) => {
     try {
       // Input validation
       if (!newFileName || newFileName.trim() === '') {
@@ -173,7 +176,7 @@ export const deleteTab = async (email, tabId) => {
   
       // Update tab name while preserving other properties
       const updatedTabs = userData.tabs.map(tab => 
-        tab.id === tabId ? { ...tab, name: newFileName } : tab
+        tab.id === tabId ? { ...tab, name: newFileName,language:newLanguage} : tab
       );
   
       await updateDoc(userRef, { tabs: updatedTabs });

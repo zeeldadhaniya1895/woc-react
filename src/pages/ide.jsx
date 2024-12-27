@@ -46,7 +46,7 @@ const dispatch = useDispatch();
             fileSectionWidth={fileSectionWidth}
             setFileSectionWidth={setFileSectionWidth}
             setFileSectionVisible={setFileSectionVisible}
-            onTabSelect={handleTabSelect}
+            onTabSelect={(tab,code)=>{handleTabSelect(tab,code)}}
             activeTab={activeTab}
             style={{
               zIndex:10000,
