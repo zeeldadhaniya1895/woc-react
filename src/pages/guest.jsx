@@ -30,7 +30,7 @@ const Guest = ({onLogout}) => {
       <div className="flex flex-1 relative overflow-hidden bg-gray-800">       
 
         {/* IDE Section */}
-        <CodeEditor fileSectionWidth={fileSectionWidth} fileSectionVisible={fileSectionVisible} />
+        <CodeEditor fileSectionWidth={fileSectionWidth} fileSectionVisible={fileSectionVisible} guest={true} />
 
       </div>
 
