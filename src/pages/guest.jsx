@@ -1,16 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import CodeEditor from "../components/codeEditor";
 import Terminal from "../components/terminal";
 import Menubar from "../components/Menubar";
 import ChatWithAI from "../components/ChatWithAI";
-
+import { setEditorLanguage } from "../store/varSlice";
+import { useDispatch } from "react-redux";
 const Guest = ({onLogout}) => {
   const [fileSectionVisible, setFileSectionVisible] = useState(true);
   const [fileSectionWidth, setFileSectionWidth] = useState(0);
   const [terminalVisible, setTerminalVisible] = useState(false);
   const [terminalHeight, setTerminalHeight] = useState(250);
-
+  const dispatch = useDispatch();
+  useEffect(()=>{dispatch(setEditorLanguage("javascript"))},[])
   return (
     <div className="h-screen flex flex-col overflow-hidden border-2 border-b-0 border-purple-800 shadow-lg border-r-purple-300"
     style={{

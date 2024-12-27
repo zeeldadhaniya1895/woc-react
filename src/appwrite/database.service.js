@@ -38,7 +38,7 @@ export const createUserWithDefaultTab = async (email) => {
       id: "mstcDefault",
       name: "default",
       language: "javascript",
-      code: "console.log('Hello World');"
+      code: `function welcome() {\n\tconsole.log("Welcome to boardcode The code editor!");\n}\n\nwelcome();\n`
     }]
   });
 };
