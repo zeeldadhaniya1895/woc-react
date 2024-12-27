@@ -247,7 +247,13 @@ export default function Filebar({ fileSectionWidth, setFileSectionWidth, onTabSe
         ) : (
           <ol className="w-full space-y-2">
             {tabs.map((tab) => (
-              <li key={tab.id} className="flex items-center justify-between text-gray-300 hover:bg-gray-800 p-2 rounded">
+              <li key={tab.id} 
+              // className="flex items-center justify-between text-gray-300 hover:bg-gray-800 p-2 rounded"
+              className={`flex items-center justify-between text-gray-300 p-2 rounded transition-colors duration-200 ${
+                activeTab?.id === tab.id 
+                  ? 'bg-gray-600 text-white' 
+                  : 'hover:bg-gray-800'
+              }`}>
 
                 <>
                   <span>
@@ -260,6 +266,16 @@ export default function Filebar({ fileSectionWidth, setFileSectionWidth, onTabSe
                   <span className="cursor-pointer flex-grow" onClick={() => handleTabClick(tab)}>
                     {tab.name}
                   </span>
+                  {/* <span 
+                  className={`cursor-pointer flex-grow p-2 rounded-md transition-colors duration-200 ${
+                    activeTab?.id === tab.id 
+                     ? 'bg-purple-600 text-white' 
+                    : 'hover:bg-gray-700'
+                  }`} 
+                    onClick={() => handleTabClick(tab)}
+                    > */}
+                      {/* {tab.name}
+                    </span> */}
                   <div className="flex gap-2">
                     <button onClick={() => handleRenameClick(tab)}>
                       <FaEdit className="text-blue-500" />
