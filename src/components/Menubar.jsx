@@ -75,12 +75,12 @@ export default function Menubar({ fileSectionVisible, setFileSectionVisible, ter
         {/* Language Dropdown */}
         {guest && (
         <div className="relative">
-          <button
+          {/* <button
             onClick={() => setLanguageDropdownVisible(!isLanguageDropdownVisible)}
             className="p-2 bg-gray-800 text-white rounded-md hover:bg-purple-500 transform hover:scale-105 transition-all duration-200 shadow-md"
           >
             <FaLanguage />
-          </button>
+          </button> */}
           <select
             className={`px-2 py-1 bg-gray-700 text-white rounded-md shadow-md focus:ring focus:ring-purple-400 ${isLanguageDropdownVisible ? "block" : "hidden sm:block"
               }`}
