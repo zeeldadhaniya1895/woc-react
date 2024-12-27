@@ -35,7 +35,7 @@ export const createUserWithDefaultTab = async (email) => {
   await setDoc(userRef, {
     email,
     tabs: [{
-      id: uuidv4(),
+      id: "mstcDefault",
       name: "default",
       language: "javascript",
       code: "console.log('Hello World');"

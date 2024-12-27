@@ -135,6 +135,8 @@ export default function Filebar({ fileSectionWidth, setFileSectionWidth, onTabSe
       const success = await deleteTab(user.email, tabToDelete);
       if (success) {
         setTabs(tabs.filter((tab) => tab.id !== tabToDelete));
+        handleTabClick(tabs[0]);
+        onTabSelect();
         setNotificationModal({
           type: "success",
           message: "Tab deleted successfully!",
@@ -280,9 +282,9 @@ export default function Filebar({ fileSectionWidth, setFileSectionWidth, onTabSe
                     <button onClick={() => handleRenameClick(tab)}>
                       <FaEdit className="text-blue-500" />
                     </button>
-                    <button onClick={() => handleDeleteClick(tab.id)}>
+                    {tab.id==="mstcDefault"? null:<button onClick={() => handleDeleteClick(tab.id)}>
                       <FaTrash className="text-red-500" />
-                    </button>
+                    </button>}
                   </div>
                 </>
 
