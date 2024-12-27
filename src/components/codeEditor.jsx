@@ -182,7 +182,7 @@ export default function CodeEditor({
                 
                 autoSaveTimerRef.current = setTimeout(() => {
                   saveCode(newCode);
-                }, 2000);
+                }, 1000);
               }
             }),
             // theme === "vs-dark" ? oneDark :  oneDark,
