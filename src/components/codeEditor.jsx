@@ -81,6 +81,7 @@ export default function CodeEditor({
   fileSectionVisible,
   activeTab,
   activeCode,
+  guest
 }) {
 
   const LoadingSkeleton = () => (
@@ -241,7 +242,7 @@ export default function CodeEditor({
   }`}
   style={{ marginLeft: fileSectionVisible ? fileSectionWidth : 0 }}
 >
-{!activeTab ? (
+{!activeTab&&!guest ? (
         <LoadingSkeleton />
       ) : (
         <>

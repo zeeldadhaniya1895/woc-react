@@ -65,6 +65,7 @@ const dispatch = useDispatch();
           fileSectionVisible={fileSectionVisible}
           activeTab={activeTab}
           activeCode={activeCode}
+          guest={false}
         />
       </div>
 
